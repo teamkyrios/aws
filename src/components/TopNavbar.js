@@ -25,27 +25,22 @@ const TopNavbar = (props) => {
 	return (
 		<div>
 			<Navbar color='light' light expand='md'>
-				<NavbarBrand href='/'>reactstrap</NavbarBrand>
+				<NavbarBrand href='/'>Farrer Park Hospital</NavbarBrand>
 				<NavbarToggler onClick={toggle} />
 				<Collapse isOpen={isOpen} navbar>
 					<Nav className='mr-auto' navbar>
 						<NavItem>
-							<NavLink href='/components/'>Components</NavLink>
-						</NavItem>
-						<NavItem>
-							<NavLink href='https://github.com/reactstrap/reactstrap'>
-								GitHub
-							</NavLink>
+							<NavLink href='/announcements/'>Announcements</NavLink>
 						</NavItem>
 						<UncontrolledDropdown nav inNavbar>
 							<DropdownToggle nav caret>
-								Options
+								Login
 							</DropdownToggle>
 							<DropdownMenu right>
-								<DropdownItem>Option 1</DropdownItem>
-								<DropdownItem>Option 2</DropdownItem>
+								<DropdownItem>Staff</DropdownItem>
+								<DropdownItem>Visitor</DropdownItem>
 								<DropdownItem divider />
-								<DropdownItem>Reset</DropdownItem>
+								<DropdownItem>Administrator</DropdownItem>
 							</DropdownMenu>
 						</UncontrolledDropdown>
 					</Nav>
