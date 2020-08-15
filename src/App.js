@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import LandingPage from './components/LandingPage';
 import TopNavbar from './components/TopNavbar';
 import AnnouncementPage from './components/AnnouncementPage';
+import LoginPage from './components/LoginPage';
 
 export default function App() {
 	return (
@@ -12,18 +13,13 @@ export default function App() {
 				<Route path='/announcements/'>
 					<AnnouncementPage />
 				</Route>
+				<Route path='/login/'>
+					<LoginPage />
+				</Route>
 				<Route path='/'>
 					<LandingPage />
 				</Route>
 			</Switch>
 		</Router>
 	);
-}
-
-function About() {
-	return <h2>About</h2>;
-}
-
-function Users() {
-	return <h2>Users</h2>;
 }

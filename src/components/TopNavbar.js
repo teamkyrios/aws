@@ -32,9 +32,12 @@ const TopNavbar = (props) => {
 						<NavItem>
 							<NavLink href='/announcements/'>Announcements</NavLink>
 						</NavItem>
+						<NavItem>
+							<NavLink href='/login/'>Login</NavLink>
+						</NavItem>
 						<UncontrolledDropdown nav inNavbar>
 							<DropdownToggle nav caret>
-								Login
+								Useless Functionality
 							</DropdownToggle>
 							<DropdownMenu right>
 								<DropdownItem>Staff</DropdownItem>
@@ -44,7 +47,7 @@ const TopNavbar = (props) => {
 							</DropdownMenu>
 						</UncontrolledDropdown>
 					</Nav>
-					<NavbarText>Simple Text</NavbarText>
+					<NavbarText>Kýrios Solutions</NavbarText>
 				</Collapse>
 			</Navbar>
 		</div>
