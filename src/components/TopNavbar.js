@@ -30,10 +30,10 @@ const TopNavbar = (props) => {
 				<Collapse isOpen={isOpen} navbar>
 					<Nav className='mr-auto' navbar>
 						<NavItem>
-							<NavLink href='/announcements/'>Announcements</NavLink>
+							<NavLink href='/announcements'>Announcements</NavLink>
 						</NavItem>
 						<NavItem>
-							<NavLink href='/login/'>Login</NavLink>
+							<NavLink href='/login'>Login</NavLink>
 						</NavItem>
 						<UncontrolledDropdown nav inNavbar>
 							<DropdownToggle nav caret>
@@ -43,7 +43,9 @@ const TopNavbar = (props) => {
 								<DropdownItem>Staff</DropdownItem>
 								<DropdownItem>Visitor</DropdownItem>
 								<DropdownItem divider />
-								<DropdownItem>Administrator</DropdownItem>
+								<DropdownItem tag='a' href='/administrator'>
+									Administrator
+								</DropdownItem>
 							</DropdownMenu>
 						</UncontrolledDropdown>
 					</Nav>
