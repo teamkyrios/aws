@@ -2,11 +2,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 const AnnoucementPage = () => {
-	return (
-		<div>
-			<h1>Announcement page</h1>
-		</div>
-	);
+  return (
+    <div>
+      <h1>Junxue was here</h1>
+    </div>
+  );
 };
 
 const mapStateToProps = (state) => {
