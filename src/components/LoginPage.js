@@ -52,23 +52,13 @@ const MySelect = ({ label, ...props }) => {
 	);
 };
 
-const LoginPage = () => {
+const LoginPage = ({ authenticate }) => {
+	let history = useHistory();
+
 	// Query database to verify login information
 	const onSubmit = (formParameters) => {
-		if (true) {
-			// Access granted, redirect to admin access website
-			history.push('/administrator');
-		} else {
-			// Access denied
-		}
-		alert(formParameters);
+		authenticate(formParameters, () => history.replace('/administrator'));
 	};
-
-	let history = useHistory();
-	let location = useLocation();
-
-	let { from } = location.state || { from: { pathname: '/' } };
-	let login = () => {};
 
 	return (
 		<div

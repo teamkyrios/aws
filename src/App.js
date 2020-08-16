@@ -7,8 +7,8 @@ import LoginPage from './components/LoginPage';
 import AdminView from './components/admin/AdminView';
 
 // Keeps track of whether user is authenticated as staff / admin.
-var authObj = {
-	isAuthenticated: true,
+const authObj = {
+	isAuthenticated: false,
 	authenticate(newLocation) {
 		authObj.isAuthenticated = true;
 		setTimeout(newLocation, 1000); // fake async, swap with actual authentication
@@ -17,6 +17,17 @@ var authObj = {
 		authObj.isAuthenticated = false;
 		setTimeout(newLocation, 1000);
 	},
+};
+
+// Callback function to change state of authObj
+const authenticateUser = (loginFormParams, ifAdmitted) => {
+	if (true) {
+		// Access granted
+		authObj.isAuthenticated = true;
+		authObj.authenticate(ifAdmitted);
+	} else {
+	}
+	alert(loginFormParams);
 };
 
 export default function App() {
@@ -31,7 +42,7 @@ export default function App() {
 					<AnnouncementPage />
 				</Route>
 				<Route path='/login/'>
-					<LoginPage />
+					<LoginPage authenticate={authenticateUser} />
 				</Route>
 				<Route path='/'>
 					<LandingPage />
