@@ -1,4 +1,5 @@
-import React from "react";
+import React from 'react';
+import { connect } from 'react-redux';
 
 const AnnoucementPage = () => {
   return (
@@ -8,4 +9,10 @@ const AnnoucementPage = () => {
   );
 };
 
-export default AnnoucementPage;
+const mapStateToProps = (state) => {
+	return {
+		isAuthenticated: state.auth.isAuthenticated,
+	};
+};
+
+export default connect(mapStateToProps, null)(AnnoucementPage);
