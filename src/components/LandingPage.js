@@ -10,7 +10,7 @@ const LandingPage = () => {
         alignItems: "center",
       }}
     >
-      <h1>Visitor Registration</h1>
+      <h2 style={{ marginLeft: 450 }}>Visitor Registration</h2>
       <Form>
         <FormGroup style={{}}>
           <Label style={styles.label} for="exampleName">
@@ -29,6 +29,7 @@ const LandingPage = () => {
             Your NRIC/Passport Number
           </Label>
           <Input
+            style={styles.input}
             type="text"
             name="nric"
             id="exampleNric"
@@ -36,8 +37,11 @@ const LandingPage = () => {
           />
         </FormGroup>
         <FormGroup>
-          <Label for="exampleContact">Contact Number</Label>
+          <Label style={styles.label} for="exampleContact">
+            Contact Number
+          </Label>
           <Input
+            style={styles.input}
             type="text"
             name="contact"
             id="exampleContact"
@@ -45,8 +49,11 @@ const LandingPage = () => {
           />
         </FormGroup>
         <FormGroup>
-          <Label for="examplePatient">Patient Name</Label>
+          <Label style={styles.label} for="examplePatient">
+            Patient Name
+          </Label>
           <Input
+            style={styles.input}
             type="text"
             name="patientName"
             id="examplePatient"
@@ -54,15 +61,18 @@ const LandingPage = () => {
           />
         </FormGroup>
         <FormGroup>
-          <Label for="examplePatientNric">Patient NRIC/Passport Number</Label>
+          <Label style={styles.label} for="examplePatientNric">
+            Patient NRIC/Passport Number
+          </Label>
           <Input
+            style={styles.input}
             type="text"
             name="nric"
             id="examplePatientNric"
             placeholder="S1234567Z"
           />
         </FormGroup>
-        <Button>Submit</Button>
+        <Button style={{ marginLeft: 720 }}>Submit</Button>
       </Form>
     </div>
   );
@@ -70,11 +80,11 @@ const LandingPage = () => {
 
 let styles = {
   input: {
-    width: 300,
-    marginLeft: 300,
+    width: 400,
+    marginLeft: 400,
   },
   label: {
-    marginLeft: 300,
+    marginLeft: 400,
   },
 };
 export default LandingPage;
