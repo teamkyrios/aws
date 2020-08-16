@@ -1,9 +1,11 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Formik, Form, useField } from 'formik';
 import styled from '@emotion/styled';
 import './FormStyles.css';
 import * as Yup from 'yup';
 import { useHistory, useLocation } from 'react-router-dom';
+import { authenticateUser } from '../actions/index';
 
 const MyTextInput = ({ label, ...props }) => {
 	const [field, meta] = useField(props);
@@ -52,12 +54,14 @@ const MySelect = ({ label, ...props }) => {
 	);
 };
 
-const LoginPage = ({ authenticate }) => {
+const LoginPage = ({ authenticateUser }) => {
 	let history = useHistory();
 
 	// Query database to verify login information
 	const onSubmit = (formParameters) => {
-		authenticate(formParameters, () => history.replace('/administrator'));
+		// Check form parameters and do necessary
+		authenticateUser(true, 'ADMINISTRATOR');
+		history.replace('/administrator'); // Replace the web page view
 	};
 
 	return (
@@ -129,4 +133,9 @@ const LoginPage = ({ authenticate }) => {
 	);
 };
 
-export default LoginPage;
+const mapDispatchToProps = (dispatch) => ({
+	authenticateUser: (isAuthenticated, accessRights) =>
+		dispatch(authenticateUser(isAuthenticated, accessRights)),
+});
+
+export default connect(null, mapDispatchToProps)(LoginPage);

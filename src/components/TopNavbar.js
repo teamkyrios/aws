@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import {
 	Collapse,
 	Navbar,
@@ -22,18 +23,22 @@ const TopNavbar = (props) => {
 
 	const toggle = () => setIsOpen(!isOpen);
 
+	var history = useHistory();
+
 	return (
 		<div>
 			<Navbar color='light' light expand='md'>
-				<NavbarBrand href='/'>Farrer Park Hospital</NavbarBrand>
+				<NavbarBrand onClick={() => history.push('/')}>Farrer Park Hospital</NavbarBrand>
 				<NavbarToggler onClick={toggle} />
 				<Collapse isOpen={isOpen} navbar>
 					<Nav className='mr-auto' navbar>
 						<NavItem>
-							<NavLink href='/announcements'>Announcements</NavLink>
+							<NavLink onClick={() => history.push('/announcements')}>
+								Announcements
+							</NavLink>
 						</NavItem>
 						<NavItem>
-							<NavLink href='/login'>Login</NavLink>
+							<NavLink onClick={() => history.push('/login')}>Login</NavLink>
 						</NavItem>
 						<UncontrolledDropdown nav inNavbar>
 							<DropdownToggle nav caret>
@@ -43,7 +48,10 @@ const TopNavbar = (props) => {
 								<DropdownItem>Staff</DropdownItem>
 								<DropdownItem>Visitor</DropdownItem>
 								<DropdownItem divider />
-								<DropdownItem tag='a' href='/administrator'>
+								<DropdownItem
+									tag='a'
+									onClick={() => history.push('/administrator')}
+								>
 									Administrator
 								</DropdownItem>
 							</DropdownMenu>
