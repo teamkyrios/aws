@@ -100,7 +100,8 @@ const LoginPage = ({ authenticateUser }) => {
 						})}
 						onSubmit={(values, { setSubmitting }) => {
 							setTimeout(() => {
-								onSubmit(JSON.stringify(values, null, 2));
+								onSubmit(values);
+								// onSubmit(JSON.stringify(values, null, 2));
 								setSubmitting(false);
 							}, 400);
 						}}
