@@ -59,9 +59,15 @@ const LoginPage = ({ authenticateUser }) => {
 
 	// Query database to verify login information
 	const onSubmit = (formParameters) => {
-		// Check form parameters and do necessary
+		// Check form parameters and do necessary, switch with backend call
+		const ACCESS = formParameters.accessType;
+		if (ACCESS == 'Administrator') {
 		authenticateUser(true, 'ADMINISTRATOR');
 		history.replace('/administrator'); // Replace the web page view
+		} else { // Staff
+		authenticateUser(true, 'STAFF');
+		history.replace('/staff'); // Replace the web page view
+		}
 	};
 
 	return (

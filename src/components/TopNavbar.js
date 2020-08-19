@@ -55,10 +55,15 @@ const TopNavbar = (props) => {
             </NavItem>
             <UncontrolledDropdown nav inNavbar>
               <DropdownToggle nav caret>
-                Useless Functionality
+                Access Type
               </DropdownToggle>
               <DropdownMenu right>
-                <DropdownItem>Staff</DropdownItem>
+                <DropdownItem
+                  tag="a"
+                  onClick={() => history.push("/staff")}
+                >
+                  Staff
+                  </DropdownItem>
                 <DropdownItem>Visitor</DropdownItem>
                 <DropdownItem divider />
                 <DropdownItem
