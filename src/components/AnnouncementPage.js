@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import styled from "@emotion/styled";
 import { Formik, Form, useField } from "formik";
 import CreateAnnouncement from "./AnnouncementComponent";
 
@@ -22,65 +21,77 @@ class AnnoucementPage extends Component {
     super(props);
 
     this.state = {
-      announcementText: null,
       displayedData: [],
       setkey: 0,
     };
+
+    this.closeAnnouncement = this.closeAnnouncement.bind(this);
   }
 
   loadText(formParameters) {
     // Make announcement??
-    this.setState({ announcementText: formParameters });
     this.state.displayedData.unshift(
       <CreateAnnouncement
-        announcementText={this.state.announcementText}
+        announcementText={formParameters}
         key={this.state.setkey}
+        id={this.state.setkey}
+        closeAnnouncement={this.closeAnnouncement}
       />
     );
     this.setState({ setkey: this.state.setkey + 1 });
   }
 
+  closeAnnouncement(id) {
+    this.state.displayedData.splice(
+      this.state.displayedData.findIndex((x) => x.props.id === id),
+      1
+    );
+    this.setState({ displayedData: this.state.displayedData });
+  }
+
   render() {
     return (
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
+      <div>
         <div>{this.state.displayedData}</div>
-        <div>
-          <h2>Admin</h2>
-          <>
-            <Formik
-              initialValues={{
-                announcement: "",
-              }}
-              onSubmit={(values, { setSubmitting }) => {
-                setTimeout(() => {
-                  this.loadText(values["announcement"]);
-                  setSubmitting(false);
-                }, 400);
-              }}
-            >
-              <Form
-                style={{
-                  alignItems: "flex-start",
-                  flexDirection: "column",
-                  display: "flex",
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <div>
+            <h2>Admin</h2>
+            <>
+              <Formik
+                initialValues={{
+                  announcement: "",
+                }}
+                onSubmit={(values, { setSubmitting }) => {
+                  setTimeout(() => {
+                    this.loadText(values["announcement"]);
+                    setSubmitting(false);
+                  }, 400);
                 }}
               >
-                <MyTextInput
-                  label="Announcement"
-                  name="announcement"
-                  type="text"
-                  placeholder="Type announcement here"
-                />
-                <button type="submit">Submit</button>
-              </Form>
-            </Formik>
-          </>
+                <Form
+                  style={{
+                    alignItems: "flex-start",
+                    flexDirection: "column",
+                    display: "flex",
+                  }}
+                >
+                  <MyTextInput
+                    label="Announcement"
+                    name="announcement"
+                    type="text"
+                    placeholder="Type announcement here"
+                  />
+                  <button type="submit">Submit</button>
+                </Form>
+              </Formik>
+            </>
+          </div>
         </div>
       </div>
     );

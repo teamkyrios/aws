@@ -7,23 +7,41 @@ class CreateAnnouncement extends Component {
 
   render() {
     if (
-      this.props.announcementText != null &&
-      this.props.announcementText != ""
+      this.props.announcementText !== null &&
+      this.props.announcementText !== ""
     ) {
       return (
         <div
           style={{
+            zIndex: 1,
             display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
+            justifyContent: "space-between",
             background: "#eb9694",
-            color: "white",
-            textAlign: "center",
-            margin: "30px",
-            padding: "30px",
+            padding: "1.2rem 1rem 1.1rem 1.4rem",
+            margin: "1rem 3rem",
           }}
         >
-          {this.props.announcementText}
+          <div
+            style={{
+              marginRight: ".5rem",
+              color: "white",
+            }}
+          >
+            {this.props.announcementText}
+          </div>
+          <button
+            style={{
+              padding: 0,
+              backgroundColor: "initial",
+              border: 0,
+              color: "grey",
+            }}
+            type="button"
+            aria-label="Close"
+            onClick={() => this.props.closeAnnouncement(this.props.id)}
+          >
+            X
+          </button>
         </div>
       );
     } else {
