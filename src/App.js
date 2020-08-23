@@ -6,6 +6,7 @@ import TopNavbar from './components/TopNavbar';
 import AnnouncementPage from './components/AnnouncementPage';
 import LoginPage from './components/LoginPage';
 import AdminView from './components/admin/AdminView';
+import StaffView from './components/staff/StaffView';
 
 function App({ isAuthenticated }) {
 	/**
@@ -48,6 +49,9 @@ function App({ isAuthenticated }) {
 				<PrivateRoute path='/administrator'>
 					<AdminView />
 				</PrivateRoute>
+				<PrivateRoute path='/staff'>
+					<StaffView/>
+				</PrivateRoute>
 			</Switch>
 		</Router>
 	);
@@ -59,4 +63,4 @@ const mapStateToProps = (state) => {
 	};
 };
 
-export default connect(mapStateToProps, null)(App);
+export default connect(mapStateToProps, null)(App); 
