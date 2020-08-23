@@ -1,10 +1,6 @@
 import React, { Component } from "react";
 
 class CreateAnnouncement extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     if (
       this.props.announcementText !== null &&
@@ -16,15 +12,17 @@ class CreateAnnouncement extends Component {
             zIndex: 1,
             display: "flex",
             justifyContent: "space-between",
-            background: "#eb9694",
+            background: "#fbf7ff",
             padding: "1.2rem 1rem 1.1rem 1.4rem",
             margin: "1rem 3rem",
+            borderRadius: "10px",
+            border: "2px solid #bc97db",
           }}
         >
           <div
             style={{
               marginRight: ".5rem",
-              color: "white",
+              color: "#4a018a",
             }}
           >
             {this.props.announcementText}
