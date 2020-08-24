@@ -6,8 +6,14 @@ import TopNavbar from './components/TopNavbar';
 import AnnouncementPage from './components/AnnouncementPage';
 import LoginPage from './components/LoginPage';
 import AdminView from './components/admin/AdminView';
+import connection from './Database';
 
 function App({ isAuthenticated }) {
+	connection.query('SELECT 1', function (error, results, fields) {
+		if (error) throw error;
+		alert('connected'); // connected!
+	});
+
 	/**
 	 * Only grant access to these pages if user is logged in as administrator or staff
 	 * Otherwise, redirect to login.
