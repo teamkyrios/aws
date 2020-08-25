@@ -4,6 +4,7 @@ import styled from "@emotion/styled";
 import "./FormStyles.css";
 import * as Yup from "yup";
 import { ChatBot, AmplifyTheme } from "aws-amplify-react";
+import ForumIcon from "@material-ui/icons/Forum";
 
 const myTheme = {
     ...AmplifyTheme,
@@ -14,6 +15,8 @@ const myTheme = {
 };
 
 const LandingPage = () => {
+    const [isChatVisible, setVisible] = React.useState(false);
+
     const handleComplete = (err, confirmation) => {
         if (err) {
             alert("Bot conversation failed");
@@ -27,27 +30,14 @@ const LandingPage = () => {
         console.log("submitting");
     };
     return (
-        <div
-            style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-            }}
-        >
-            <header className="App-header">
-                <h1 className="App-title">Welcome to ReactBot</h1>
-            </header>
-            <p className="App-intro">
-                <ChatBot
-                    title="My React Bot"
-                    theme={myTheme}
-                    botName="ScheduleAppointment_dev"
-                    welcomeMessage="Welcome, how can I help you today?"
-                    onComplete={handleComplete}
-                    clearOnComplete={true}
-                />
-            </p>
-            <div>
+        <div>
+            <div
+                style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                }}
+            >
                 <h2>Visitor Registration</h2>
                 <>
                     <Formik
@@ -110,13 +100,45 @@ const LandingPage = () => {
                                 placeholder="S9876543Z"
                             />
 
-                            <button style={{ marginBottom: 20 }} type="submit">
+                            <button
+                                style={{ marginBottom: 20, borderRadius: 10 }}
+                                type="submit"
+                            >
                                 Submit
                             </button>
                         </Form>
                     </Formik>
                 </>
             </div>
+            <div>
+                <button
+                    style={{
+                        position: "absolute",
+                        right: 100,
+                        bottom: 50,
+                        borderRadius: 10,
+                    }}
+                    onClick={() => setVisible(!isChatVisible)}
+                >
+                    <ForumIcon />
+                </button>
+            </div>
+            {isChatVisible ? (
+                <div style={{ position: "absolute", right: 100, bottom: 100 }}>
+                    <p className="App-intro">
+                        <ChatBot
+                            title="AWS Lex"
+                            theme={myTheme}
+                            botName="ScheduleAppointment_dev"
+                            welcomeMessage="Welcome, how can I help you today?"
+                            onComplete={handleComplete}
+                            clearOnComplete={true}
+                        />
+                    </p>
+                </div>
+            ) : (
+                <div></div>
+            )}
         </div>
     );
 };
