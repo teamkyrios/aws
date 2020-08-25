@@ -11,6 +11,8 @@
 		"@testing-library/user-event": "^7.2.1",
 		"bootstrap": "^4.5.2",
 		"formik": "^2.1.5",
+		"mdbreact": "^4.27.0",
+		"mysql": "latest",
 		"react": "^16.13.1",
 		"react-dom": "^16.13.1",
 		"react-redux": "^7.2.1",
@@ -18,8 +20,7 @@
 		"react-scripts": "3.4.3",
 		"reactstrap": "^8.5.1",
 		"redux": "^4.0.5",
-		"yup": "^0.29.3",
-		"mysql": "latest"
+		"yup": "^0.29.3"
 	},
 	"scripts": {
 		"start": "react-scripts start",

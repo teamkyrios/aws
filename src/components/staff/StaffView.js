@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import './StaffView.css';
 
 /**
@@ -9,36 +9,31 @@ then in the staff page, they are also able to manually check a visitor out/in
 and they can also toggle the patient's allow Visitor condition
  */
 const StaffView = () => {
-    useEffect(()=> {
-        getUpdatedVisitorCount();
-    },[])
+	useEffect(() => {
+		getUpdatedVisitorCount();
+	}, []);
 
-    const [liveVisitorNo, setLiveVisitorNo] = useState(0);
+	const [liveVisitorNo, setLiveVisitorNo] = useState(0);
 
-    // Subscribe to DB changes
-    const getUpdatedVisitorCount = () => {
+	// Subscribe to DB changes
+	const getUpdatedVisitorCount = () => {};
 
-    }
-
-return (
-    <div>
-        <h1>Staff View</h1>
-        <div id='StaffViewVisitorCountBanner'>
-<h3>Live visitor number: {liveVisitorNo}</h3>
-        </div>
-        <h3>
-            Detailed view of visitiors:
-        </h3>
-        <div>
-            <p>Visitor - - - - Patient bed number</p>
-            <p>[Button to view different 4 wards]</p>
-        </div>
-        <div>
-            <p>Allow visitor to check in</p>
-        </div>
-
-    </div>
-)
-}
+	return (
+		<div>
+			<h1>Staff View</h1>
+			<div id='StaffViewVisitorCountBanner'>
+				<h3>Live visitor number: {liveVisitorNo}</h3>
+			</div>
+			<h3>Detailed view of visitiors:</h3>
+			<div>
+				<p>Visitor - - - - Patient bed number</p>
+				<p>[Button to view different 4 wards]</p>
+			</div>
+			<div>
+				<p>Allow visitor to check in</p>
+			</div>
+		</div>
+	);
+};
 
 export default StaffView;
