@@ -1,5 +1,5 @@
 {
-    "resourceName": "chatbot",
+    "resourceName": "lexbffe6c07",
     "intents": [
         {
             "cancelMessage": "Okay, I will not schedule an appointment.",
