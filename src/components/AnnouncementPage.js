@@ -5,17 +5,6 @@ import Alert from '@material-ui/lab/Alert';
 import AlertTitle from '@material-ui/lab/AlertTitle';
 import WardViewTable from './WardViewTable';
 
-const customStyles = {
-	content: {
-		top: '50%',
-		left: '50%',
-		right: 'auto',
-		bottom: 'auto',
-		marginRight: '-50%',
-		transform: 'translate(-50%, -50%)',
-	},
-};
-
 /**
  * Alert banner which will show when there are visitors who want to visit, banner can be closed by staff.
  * @param {*} props
@@ -28,7 +17,8 @@ const TopBanner = (props) => {
 			<AlertTitle>
 				<strong>Pending Visitors </strong>
 			</AlertTitle>
-			There are visitors awaiting entry for wards 3, 5 and 16 !
+			<p>There are visitors awaiting entry for wards 3, 5 and 16 !</p>
+			There are {props.liveVisitorNo} visitors currently
 		</Alert>
 	);
 };
@@ -40,7 +30,7 @@ const AnnoucementPage = () => {
 		getUpdatedVisitorCount();
 	}, []);
 
-	const [liveVisitorNo, setLiveVisitorNo] = useState(0);
+	const [liveVisitorNo, setLiveVisitorNo] = useState(115);
 	const [isBannerShowing, setIsBannerShowing] = useState(true);
 	const [allWards, setAllWards] = useState([
 		createData('Hans', 4, 1, 12, 4),
@@ -63,51 +53,6 @@ const AnnoucementPage = () => {
 	function createData(name, wardNumber, bedNumber, floorNumber, currVisitors) {
 		return { name, wardNumber, bedNumber, floorNumber, currVisitors };
 	}
-
-	const ModalDetails = ({ name, wardNumber, bedNumber, closeModal }) => {
-		return (
-			<div>
-				<h2>{name}</h2>
-				<button onClick={closeModal}>close</button>
-				<div>{wardNumber}</div>
-				<form>
-					<input />
-					<button>{bedNumber}</button>
-					<button>inside</button>
-					<button>the modal</button>
-				</form>
-			</div>
-		);
-	};
-
-	const IndividualWards = ({ wardNumber, bedNumber, visitorName }) => {
-		const [isOpen, setIsOpen] = useState(false);
-
-		const closeModal = () => setIsOpen(false);
-
-		return (
-			<div>
-				<Modal
-					isOpen={isOpen}
-					onRequestClose={closeModal}
-					style={customStyles}
-					contentLabel='Example Modal'
-				>
-					<ModalDetails
-						name={visitorName}
-						wardNumber={wardNumber}
-						bedNumber={bedNumber}
-						closeModal={closeModal}
-					/>
-				</Modal>
-				<h3>Ward number: {wardNumber}</h3>
-				<p>Bed number: {bedNumber} </p>
-				<p>Patient name: {visitorName} </p>
-				<p>Current number of visitors </p>
-				<button onClick={() => setIsOpen(true)}>See more</button>
-			</div>
-		);
-	};
 
 	return (
 		<div>

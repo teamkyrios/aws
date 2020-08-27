@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { lighten, makeStyles } from '@material-ui/core/styles';
@@ -20,6 +20,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
+import Modal from 'react-modal';
 
 function descendingComparator(a, b, orderBy) {
 	if (b[orderBy] < a[orderBy]) {
@@ -76,13 +77,8 @@ function EnhancedTableHead(props) {
 	return (
 		<TableHead>
 			<TableRow>
-				<TableCell padding='checkbox'>
-					<Checkbox
-						indeterminate={numSelected > 0 && numSelected < rowCount}
-						checked={rowCount > 0 && numSelected === rowCount}
-						onChange={onSelectAllClick}
-						inputProps={{ 'aria-label': 'select all desserts' }}
-					/>
+				<TableCell>
+					<button>View all details</button>
 				</TableCell>
 				{headCells.map((headCell) => (
 					<TableCell
@@ -216,7 +212,6 @@ export default function EnhancedTable({ rows }) {
 	const [orderBy, setOrderBy] = React.useState('wardNumber');
 	const [selected, setSelected] = React.useState([]);
 	const [page, setPage] = React.useState(0);
-	const [dense, setDense] = React.useState(false);
 	const [rowsPerPage, setRowsPerPage] = React.useState(5); // Start with 5 rows per page showing
 
 	const handleRequestSort = (event, property) => {
@@ -234,26 +229,6 @@ export default function EnhancedTable({ rows }) {
 		setSelected([]);
 	};
 
-	const handleClick = (event, name) => {
-		const selectedIndex = selected.indexOf(name);
-		let newSelected = [];
-
-		if (selectedIndex === -1) {
-			newSelected = newSelected.concat(selected, name);
-		} else if (selectedIndex === 0) {
-			newSelected = newSelected.concat(selected.slice(1));
-		} else if (selectedIndex === selected.length - 1) {
-			newSelected = newSelected.concat(selected.slice(0, -1));
-		} else if (selectedIndex > 0) {
-			newSelected = newSelected.concat(
-				selected.slice(0, selectedIndex),
-				selected.slice(selectedIndex + 1)
-			);
-		}
-
-		setSelected(newSelected);
-	};
-
 	const handleChangePage = (event, newPage) => {
 		setPage(newPage);
 	};
@@ -267,6 +242,58 @@ export default function EnhancedTable({ rows }) {
 
 	const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
+	const IndividualWards = ({ wardNumber, bedNumber, visitorName }) => {
+		const [isOpen, setIsOpen] = useState(false);
+
+		const closeModal = () => setIsOpen(false);
+
+		return (
+			<div>
+				<Modal
+					isOpen={isOpen}
+					onRequestClose={closeModal}
+					style={customStyles}
+					contentLabel='Example Modal'
+				>
+					<ModalDetails
+						name={visitorName}
+						wardNumber={wardNumber}
+						bedNumber={bedNumber}
+						closeModal={closeModal}
+					/>
+				</Modal>
+				<button onClick={() => setIsOpen(true)}>See more</button>
+			</div>
+		);
+	};
+
+	const customStyles = {
+		content: {
+			top: '50%',
+			left: '50%',
+			right: 'auto',
+			bottom: 'auto',
+			marginRight: '-50%',
+			transform: 'translate(-50%, -50%)',
+		},
+	};
+
+	const ModalDetails = ({ name, wardNumber, bedNumber, closeModal }) => {
+		return (
+			<div>
+				<h2>{name}</h2>
+				<button onClick={closeModal}>close</button>
+				<div>{wardNumber}</div>
+				<form>
+					<input />
+					<button>{bedNumber}</button>
+					<button>inside</button>
+					<button>the modal</button>
+				</form>
+			</div>
+		);
+	};
+
 	return (
 		<div className={classes.root}>
 			<Paper className={classes.paper}>
@@ -275,7 +302,7 @@ export default function EnhancedTable({ rows }) {
 					<Table
 						className={classes.table}
 						aria-labelledby='tableTitle'
-						size={dense ? 'small' : 'medium'}
+						size={'medium'}
 						aria-label='enhanced table'
 					>
 						<EnhancedTableHead
@@ -297,17 +324,16 @@ export default function EnhancedTable({ rows }) {
 									return (
 										<TableRow
 											hover
-											onClick={(event) => handleClick(event, row.name)}
-											role='checkbox'
 											aria-checked={isItemSelected}
 											tabIndex={-1}
 											key={row.name}
 											selected={isItemSelected}
 										>
-											<TableCell padding='checkbox'>
-												<Checkbox
-													checked={isItemSelected}
-													inputProps={{ 'aria-labelledby': labelId }}
+											<TableCell>
+												<IndividualWards
+													wardNumber={row.wardNumber}
+													bedNumber={row.bedNumber}
+													visitorName={row.name}
 												/>
 											</TableCell>
 											<TableCell
@@ -326,7 +352,7 @@ export default function EnhancedTable({ rows }) {
 									);
 								})}
 							{emptyRows > 0 && (
-								<TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
+								<TableRow style={{ height: 53 * emptyRows }}>
 									<TableCell colSpan={6} />
 								</TableRow>
 							)}
