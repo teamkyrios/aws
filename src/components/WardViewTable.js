@@ -13,14 +13,11 @@ import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
-import Checkbox from '@material-ui/core/Checkbox';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
-import Modal from 'react-modal';
+import IndividualWards from './IndividualWards';
 
 function descendingComparator(a, b, orderBy) {
 	if (b[orderBy] < a[orderBy]) {
@@ -241,58 +238,6 @@ export default function EnhancedTable({ rows }) {
 	const isSelected = (name) => selected.indexOf(name) !== -1;
 
 	const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
-
-	const IndividualWards = ({ wardNumber, bedNumber, visitorName }) => {
-		const [isOpen, setIsOpen] = useState(false);
-
-		const closeModal = () => setIsOpen(false);
-
-		return (
-			<div>
-				<Modal
-					isOpen={isOpen}
-					onRequestClose={closeModal}
-					style={customStyles}
-					contentLabel='Example Modal'
-				>
-					<ModalDetails
-						name={visitorName}
-						wardNumber={wardNumber}
-						bedNumber={bedNumber}
-						closeModal={closeModal}
-					/>
-				</Modal>
-				<button onClick={() => setIsOpen(true)}>See more</button>
-			</div>
-		);
-	};
-
-	const customStyles = {
-		content: {
-			top: '50%',
-			left: '50%',
-			right: 'auto',
-			bottom: 'auto',
-			marginRight: '-50%',
-			transform: 'translate(-50%, -50%)',
-		},
-	};
-
-	const ModalDetails = ({ name, wardNumber, bedNumber, closeModal }) => {
-		return (
-			<div>
-				<h2>{name}</h2>
-				<button onClick={closeModal}>close</button>
-				<div>{wardNumber}</div>
-				<form>
-					<input />
-					<button>{bedNumber}</button>
-					<button>inside</button>
-					<button>the modal</button>
-				</form>
-			</div>
-		);
-	};
 
 	return (
 		<div className={classes.root}>

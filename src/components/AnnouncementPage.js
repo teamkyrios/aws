@@ -42,7 +42,6 @@ const AnnoucementPage = () => {
 		createData('Tomas', 3, 3, 11, 1),
 		createData('Toppiex', 5, 2, 13, 6),
 	]);
-	const [modalIsOpen, setIsOpen] = useState(false);
 
 	// Subscribe to DB changes
 	const getUpdatedVisitorCount = () => {};
