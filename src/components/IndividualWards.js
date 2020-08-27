@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import Modal from 'react-modal';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
 
 const customStyles = {
 	content: {
@@ -14,15 +16,19 @@ const customStyles = {
 
 const ModalDetails = ({ name, wardNumber, bedNumber, closeModal }) => {
 	return (
-		<div>
+		<div style={{ display: 'flex', flexDirection: 'column' }}>
 			<h2>{name}</h2>
-			<button onClick={closeModal}>close</button>
-			<div>{wardNumber}</div>
+			<FontAwesomeIcon
+				icon={faTimes}
+				onClick={closeModal}
+				style={{ position: 'relative', left: '90%', top: '10%' }}
+			/>
+			<p>Ward number: {wardNumber}</p>
+			<p>Bed number: {bedNumber}</p>
+			<h3>Scan a visitor in</h3>
 			<form>
 				<input />
-				<button>{bedNumber}</button>
-				<button>inside</button>
-				<button>the modal</button>
+				<button>Done</button>
 			</form>
 		</div>
 	);
