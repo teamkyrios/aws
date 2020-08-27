@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import Modal from 'react-modal';
 import Alert from '@material-ui/lab/Alert';
 import AlertTitle from '@material-ui/lab/AlertTitle';
-import WardViewTable from './WardViewTable';
 
 const AnnoucementPage = () => {
 	return (
