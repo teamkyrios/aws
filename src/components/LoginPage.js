@@ -61,13 +61,32 @@ const LoginPage = ({ authenticateUser }) => {
 	const onSubmit = (formParameters) => {
 		// Check form parameters and do necessary, switch with backend call
 		const ACCESS = formParameters.accessType;
-		if (ACCESS == 'Administrator') {
-		authenticateUser(true, 'ADMINISTRATOR');
-		history.replace('/administrator'); // Replace the web page view
-		} else { // Staff
-		authenticateUser(true, 'STAFF');
-		history.replace('/staff'); // Replace the web page view
-		}
+		fetch('http://kyrios-env.eba-kvpkgwmc.us-east-1.elasticbeanstalk.com/login', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				email: formParameters.staffID,
+				password: formParameters.password,
+			}),
+		})
+			.then((res) => res.json())
+			.then((res) => {
+				if (res.code == 200) {
+					if (ACCESS == 'Administrator') {
+						authenticateUser(true, 'ADMINISTRATOR');
+						history.replace('/administrator'); // Replace the web page view
+					} else {
+						// Staff
+						authenticateUser(true, 'STAFF');
+						history.replace('/staff'); // Replace the web page view
+					}
+				} else {
+					alert('Failed to login');
+				}
+			})
+			.catch((err) => console.log('Error validating user'));
 	};
 
 	return (
