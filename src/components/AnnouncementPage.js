@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Formik, Form, useField } from "formik";
-import CreateAnnouncement from "./admin/AnnouncementComponent";
+import AnnouncementsGroup from "./admin/AnnouncementsGroup";
+import * as Yup from "yup";
 
-const TextInput = ({ label, ...props }) => {
+const MyTextInput = ({ label, ...props }) => {
 	const [field, meta] = useField(props);
 	return (
 		<>
@@ -16,53 +17,190 @@ const TextInput = ({ label, ...props }) => {
 	);
 };
 
+const MyNumberInput = ({ label, ...props }) => {
+	const [field, meta] = useField(props);
+	return (
+		<>
+			<label htmlFor={props.id || props.name}>{label}</label>
+			<input className="number-input" {...field} {...props} />
+			{meta.touched && meta.error ? (
+				<div className="error">{meta.error}</div>
+			) : null}
+		</>
+	);
+};
+
+const AnnouncementForm = ({ loadAnnouncement }) => {
+	return (
+		<Formik
+			initialValues={{
+				announcement: "",
+			}}
+			validationSchema={Yup.object({
+				announcement: Yup.string()
+					.min(1, "Must be at least 1 character long")
+					.required("Required"),
+			})}
+			onSubmit={(values, { resetForm }) => {
+				loadAnnouncement(values["announcement"]);
+				resetForm({ values: "" });
+			}}
+		>
+			<Form
+				style={{
+					alignItems: "flex-start",
+					flexDirection: "column",
+					display: "flex",
+				}}
+			>
+				<MyTextInput
+					label="Make an announcement"
+					name="announcement"
+					type="text"
+					placeholder="Type announcement here"
+				/>
+				<button type="submit">Announce</button>
+			</Form>
+		</Formik>
+	);
+};
+
+const PatientForm = ({ fetchPatient }) => {
+	return (
+		<Formik
+			initialValues={{
+				patient: "",
+			}}
+			validationSchema={Yup.object({
+				patient: Yup.string()
+					.min(1, "Must be at least 1 character long")
+					.required("Required"),
+			})}
+			onSubmit={(values) => {
+				fetchPatient(values["patient"]);
+			}}
+		>
+			<Form
+				style={{
+					alignItems: "flex-start",
+					flexDirection: "column",
+					display: "flex",
+				}}
+			>
+				<MyTextInput
+					label="Find patient"
+					name="patient"
+					type="text"
+					placeholder="NRIC/ID#"
+				/>
+				<button type="submit">Search</button>
+			</Form>
+		</Formik>
+	);
+};
+
+const PatientComponent = ({
+	editingPatient,
+	name,
+	ID,
+	maxVisitorNum,
+	change,
+}) => {
+	if (editingPatient === false) {
+		return <div></div>;
+	} else {
+		return (
+			<>
+				<p style={{ margin: "5vh 0vh" }}>
+					--------------------------------------------------------------
+				</p>
+				<p>Patient's name: {name}</p>
+				<p>Patient's ID: {ID}</p>
+				<p>Current maximum number of visitors: {maxVisitorNum}</p>
+				<Formik
+					initialValues={{
+						visitors: 5,
+					}}
+					validationSchema={Yup.object({
+						visitors: Yup.number()
+							.min(0, "Must be at least 0")
+							.max(
+								5,
+								"Must be at most 5 due to current restrictions"
+							)
+							.required("Required"),
+					})}
+					onSubmit={(values) => {
+						change(values["visitors"]);
+						console.log(values);
+					}}
+				>
+					<Form
+						style={{
+							alignItems: "flex-start",
+							flexDirection: "column",
+							display: "flex",
+						}}
+					>
+						<MyNumberInput
+							label="Change maximum number of visitors"
+							name="visitors"
+							type="number"
+							placeholder="Enter a number from 0 to 5"
+						/>
+						<button type="submit">Confirm change</button>
+					</Form>
+				</Formik>
+			</>
+		);
+	}
+};
+
 class AnnoucementPage extends Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			displayedAnnouncements: [],
-			setkey: 0,
+			patientName: null,
+			patientId: null,
+			maxVisitorNum: null,
+			editingPatient: false,
 		};
 
-		this.closeAnnouncement = this.closeAnnouncement.bind(this);
-	}
-
-	loadAnnouncement(formParameters) {
-		// Make announcement??
-		this.state.displayedAnnouncements.unshift(
-			<CreateAnnouncement
-				announcementText={formParameters}
-				key={this.state.setkey}
-				id={this.state.setkey}
-				closeAnnouncement={this.closeAnnouncement}
-			/>
-		);
-		this.setState({ setkey: this.state.setkey + 1 });
-	}
-
-	closeAnnouncement(id) {
-		this.state.displayedAnnouncements.splice(
-			this.state.displayedAnnouncements.findIndex(
-				(x) => x.props.id === id
-			),
-			1
-		);
-		this.setState({
-			displayedAnnouncements: this.state.displayedAnnouncements,
-		});
+		this.changeVisitorNumber = this.changeVisitorNumber.bind(this);
+		this.fetchPatient = this.fetchPatient.bind(this);
+		this.loadAnnouncement = this.loadAnnouncement.bind(this);
 	}
 
 	fetchPatient(id) {
+		console.log("fetching patient");
 		// Call backend
 		// Display patient name, id, visitors allowed
 		// edit visitors allowed and send info back
+		this.setState({
+			patientName: null,
+			patientId: null,
+			maxVisitorNum: null,
+			editingPatient: true,
+		});
+	}
+
+	loadAnnouncement(values) {
+		console.log("loading announcement");
+		// put in backend
+	}
+
+	changeVisitorNumber(number) {
+		this.setState({
+			maxVisitorNum: number,
+		});
+		console.log(this.state.maxVisitorNum);
 	}
 
 	render() {
 		return (
 			<div>
-				<div>{this.state.displayedAnnouncements}</div>
+				<AnnouncementsGroup />
 				<div
 					style={{
 						display: "flex",
@@ -72,61 +210,18 @@ class AnnoucementPage extends Component {
 				>
 					<div>
 						<h2>Admin</h2>
-						<>
-							<Formik
-								initialValues={{
-									announcement: "",
-								}}
-								onSubmit={(values, { resetForm }) => {
-									this.loadAnnouncement(
-										values["announcement"]
-									);
-									resetForm({ values: "" });
-								}}
-							>
-								<Form
-									style={{
-										alignItems: "flex-start",
-										flexDirection: "column",
-										display: "flex",
-									}}
-								>
-									<TextInput
-										label="Make an announcement"
-										name="announcement"
-										type="text"
-										placeholder="Type announcement here"
-									/>
-									<button type="submit">Announce</button>
-								</Form>
-							</Formik>
-						</>
-						<>
-							<Formik
-								initialValues={{
-									patient: "",
-								}}
-								onSubmit={(values) => {
-									this.fetchPatient(values["patient"]);
-								}}
-							>
-								<Form
-									style={{
-										alignItems: "flex-start",
-										flexDirection: "column",
-										display: "flex",
-									}}
-								>
-									<TextInput
-										label="Find patient"
-										name="patient"
-										type="text"
-										placeholder="NRIC/ID#"
-									/>
-									<button type="submit">Search</button>
-								</Form>
-							</Formik>
-						</>
+						<AnnouncementForm
+							loadAnnouncement={this.loadAnnouncement}
+						/>
+						<p style={{ margin: "5vh" }}></p>
+						<PatientForm fetchPatient={this.fetchPatient} />
+						<PatientComponent
+							editingPatient={this.state.editingPatient}
+							name={this.state.patientName}
+							ID={this.state.patientId}
+							maxVisitorNum={this.maxVisitorNum}
+							change={this.changeVisitorNumber}
+						/>
 					</div>
 				</div>
 			</div>
