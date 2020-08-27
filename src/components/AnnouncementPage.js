@@ -1,34 +1,39 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { Jumbotron, Button } from 'reactstrap';
-import { MDBCloseIcon } from 'mdbreact';
+import Modal from 'react-modal';
+import Alert from '@material-ui/lab/Alert';
+import AlertTitle from '@material-ui/lab/AlertTitle';
+import WardViewTable from './WardViewTable';
 
+const customStyles = {
+	content: {
+		top: '50%',
+		left: '50%',
+		right: 'auto',
+		bottom: 'auto',
+		marginRight: '-50%',
+		transform: 'translate(-50%, -50%)',
+	},
+};
+
+/**
+ * Alert banner which will show when there are visitors who want to visit, banner can be closed by staff.
+ * @param {*} props
+ */
 const TopBanner = (props) => {
 	if (!props.isShowing) return null;
 
 	return (
-		<div
-			style={{
-				display: 'flex',
-				justifySelf: 'center',
-				alignSelf: 'center',
-				height: '80%',
-				width: '80%',
-				backgroundColor: 'gold',
-				borderColor: 'black',
-				flexDirection: 'column',
-			}}
-		>
-			<h2>Visitor Management</h2>
-			<p>An all in one system for managing visitors</p>
-
-			<h3>Live visitor number: {props.liveVisitorNo}</h3>
-			<Button color='primary' onClick={props.closeBanner}>
-				Close
-			</Button>
-		</div>
+		<Alert severity='info' onClose={props.closeBanner}>
+			<AlertTitle>
+				<strong>Pending Visitors </strong>
+			</AlertTitle>
+			There are visitors awaiting entry for wards 3, 5 and 16 !
+		</Alert>
 	);
 };
+
+Modal.setAppElement('#root');
 
 const AnnoucementPage = () => {
 	useEffect(() => {
@@ -38,36 +43,80 @@ const AnnoucementPage = () => {
 	const [liveVisitorNo, setLiveVisitorNo] = useState(0);
 	const [isBannerShowing, setIsBannerShowing] = useState(true);
 	const [allWards, setAllWards] = useState([
-		{ wardNumber: 1, visitorName: 'Hans', bedNumber: 2 },
-		{ wardNumber: 1, visitorName: 'Tom', bedNumber: 3 },
-		{ wardNumber: 1, visitorName: 'Jessi', bedNumber: 1 },
-		{ wardNumber: 1, visitorName: 'Ray', bedNumber: 4 },
+		createData('Hans', 4, 1, 12, 4),
+		createData('Rui Feng', 4, 2, 12, 1),
+		createData('Max', 4, 3, 12, 2),
+		createData('Jun Xue', 4, 4, 12, 3),
+		createData('Bayes', 1, 1, 10, 2),
+		createData('Xuan Yi', 2, 2, 10, 3),
+		createData('Tomas', 3, 3, 11, 1),
+		createData('Toppiex', 5, 2, 13, 6),
 	]);
+	const [modalIsOpen, setIsOpen] = useState(false);
 
 	// Subscribe to DB changes
 	const getUpdatedVisitorCount = () => {};
 
-	const renderAllWards = allWards.map((ward) => (
-		<li>
-			<h3>Ward number: {ward.wardNumber}</h3>
-			<p>Bed number: {ward.bedNumber} </p>
-			<p>Patient name: {ward.visitorName} </p>
-			<p>Current number of visitors </p>
-			<Button onClick={() => alert('Open modal')}>See more</Button>
-		</li>
-	));
+	/**
+	 * Format data into an object
+	 */
+	function createData(name, wardNumber, bedNumber, floorNumber, currVisitors) {
+		return { name, wardNumber, bedNumber, floorNumber, currVisitors };
+	}
+
+	const ModalDetails = ({ name, wardNumber, bedNumber, closeModal }) => {
+		return (
+			<div>
+				<h2>{name}</h2>
+				<button onClick={closeModal}>close</button>
+				<div>{wardNumber}</div>
+				<form>
+					<input />
+					<button>{bedNumber}</button>
+					<button>inside</button>
+					<button>the modal</button>
+				</form>
+			</div>
+		);
+	};
+
+	const IndividualWards = ({ wardNumber, bedNumber, visitorName }) => {
+		const [isOpen, setIsOpen] = useState(false);
+
+		const closeModal = () => setIsOpen(false);
+
+		return (
+			<div>
+				<Modal
+					isOpen={isOpen}
+					onRequestClose={closeModal}
+					style={customStyles}
+					contentLabel='Example Modal'
+				>
+					<ModalDetails
+						name={visitorName}
+						wardNumber={wardNumber}
+						bedNumber={bedNumber}
+						closeModal={closeModal}
+					/>
+				</Modal>
+				<h3>Ward number: {wardNumber}</h3>
+				<p>Bed number: {bedNumber} </p>
+				<p>Patient name: {visitorName} </p>
+				<p>Current number of visitors </p>
+				<button onClick={() => setIsOpen(true)}>See more</button>
+			</div>
+		);
+	};
 
 	return (
 		<div>
-			<h1>Staff View</h1>
 			<TopBanner
 				isShowing={isBannerShowing}
 				closeBanner={() => setIsBannerShowing(false)}
 				liveVisitorNo={liveVisitorNo}
 			/>
-
-			<h3>Detailed view of visitiors:</h3>
-			<ul>{renderAllWards}</ul>
+			<WardViewTable rows={allWards} />
 		</div>
 	);
 };
