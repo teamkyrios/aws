@@ -53,17 +53,23 @@ const StaffView = () => {
 	const scanVisitorIn = (floorNumber, wardNumber, bedNumber, visitorNric, event) => {
 		event.preventDefault();
 		var newState = [...allWards];
+		var isVisitorAllowed = false;
 		newState.forEach((patient) => {
 			if (
 				patient.wardNumber == wardNumber &&
 				patient.bedNumber == bedNumber &&
 				patient.floorNumber == floorNumber
 			) {
-				patient.currVisitors += 1;
+				if (patient.currVisitors < 5) {
+					patient.currVisitors += 1;
+					isVisitorAllowed = true;
+				}
 			}
 		});
 		setAllWards(newState);
-		alert(visitorNric);
+		isVisitorAllowed
+			? alert('Visitor is successfully admitted to the ward')
+			: alert('Patient room is full, more visitors are not allowed');
 	};
 
 	/**
