@@ -43,7 +43,7 @@ const StaffView = () => {
 		createData('Bayes', 1, 1, 10, 2),
 		createData('Xuan Yi', 2, 2, 10, 3),
 		createData('Tomas', 3, 3, 11, 1),
-		createData('Toppiex', 5, 2, 13, 6),
+		createData('Toppiex', 5, 2, 13, 5),
 	]);
 
 	// Subscribe to DB changes

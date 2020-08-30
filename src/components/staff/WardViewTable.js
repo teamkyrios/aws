@@ -18,6 +18,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import IndividualWards from './IndividualWards';
+import Badge from '@material-ui/core/Badge';
 
 function descendingComparator(a, b, orderBy) {
 	if (b[orderBy] < a[orderBy]) {
@@ -295,7 +296,20 @@ export default function EnhancedTable({ rows, scanVisitorIn }) {
 											<TableCell align='right'>{row.wardNumber}</TableCell>
 											<TableCell align='right'>{row.bedNumber}</TableCell>
 											<TableCell align='right'>{row.floorNumber}</TableCell>
-											<TableCell align='right'>{row.currVisitors}</TableCell>
+											<TableCell align='right'>
+												<Badge
+													color={
+														row.currVisitors == 5
+															? 'secondary'
+															: 'primary'
+													}
+													overlap='circle'
+													variant='dot'
+													badgeContent=' '
+												>
+													{'  ' + row.currVisitors}
+												</Badge>
+											</TableCell>
 										</TableRow>
 									);
 								})}
