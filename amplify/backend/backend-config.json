@@ -1,12 +1,12 @@
 {
 	"auth": {
-		"cognito602a4e35": {
+		"cognito5179d182": {
 			"service": "Cognito",
 			"providerPlugin": "awscloudformation"
 		}
 	},
 	"interactions": {
-		"chatbot": {
+		"lexbffe6c07": {
 			"service": "Lex",
 			"providerPlugin": "awscloudformation",
 			"build": true

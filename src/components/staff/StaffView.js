@@ -46,8 +46,64 @@ const StaffView = () => {
 		createData('Toppiex', 5, 2, 13, 5),
 	]);
 
+	const getAllPatients = () => {
+		fetch('http://kyrios-env.eba-kvpkgwmc.us-east-1.elasticbeanstalk.com/login', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				email: formParameters.staffID,
+				password: formParameters.password,
+			}),
+		})
+			.then((res) => res.json())
+			.then((res) => {
+				if (res.code == 200) {
+					if (ACCESS == 'Administrator') {
+						authenticateUser(true, 'ADMINISTRATOR');
+						history.replace('/administrator'); // Replace the web page view
+					} else {
+						// Staff
+						authenticateUser(true, 'STAFF');
+						history.replace('/staff'); // Replace the web page view
+					}
+				} else {
+					alert('Failed to login');
+				}
+			})
+			.catch((err) => console.log('Error validating user'));
+	};
+
 	// Subscribe to DB changes
-	const getUpdatedVisitorCount = () => {};
+	const getUpdatedVisitorCount = () => {
+		fetch('http://kyrios-env.eba-kvpkgwmc.us-east-1.elasticbeanstalk.com/login', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				email: formParameters.staffID,
+				password: formParameters.password,
+			}),
+		})
+			.then((res) => res.json())
+			.then((res) => {
+				if (res.code == 200) {
+					if (ACCESS == 'Administrator') {
+						authenticateUser(true, 'ADMINISTRATOR');
+						history.replace('/administrator'); // Replace the web page view
+					} else {
+						// Staff
+						authenticateUser(true, 'STAFF');
+						history.replace('/staff'); // Replace the web page view
+					}
+				} else {
+					alert('Failed to login');
+				}
+			})
+			.catch((err) => console.log('Error validating user'));
+	};
 
 	// Scan's visitor in, and updates visitor count for that bed.
 	const scanVisitorIn = (floorNumber, wardNumber, bedNumber, visitorNric, event) => {

@@ -98,7 +98,7 @@ const LoginPage = ({ authenticateUser }) => {
 			}}
 		>
 			<div>
-				<h2>Staff Login</h2>
+				<h2>Login</h2>
 				<>
 					<Formik
 						initialValues={{
