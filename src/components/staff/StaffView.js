@@ -31,7 +31,6 @@ Modal.setAppElement('#root');
  */
 const StaffView = ({ storeVisitors, allCheckedInVisitors }) => {
 	useEffect(() => {
-		getUpdatedVisitorCount();
 		getAllVisitors();
 	}, []);
 
@@ -48,7 +47,7 @@ const StaffView = ({ storeVisitors, allCheckedInVisitors }) => {
 		createData('Toppiex', 5, 2, 13, 5),
 	]);
 
-	// Get all visitors currently
+	// Get all visitors currently checked in
 	const getAllVisitors = () => {
 		console.log('Getting visitors');
 		fetch(
@@ -67,47 +66,20 @@ const StaffView = ({ storeVisitors, allCheckedInVisitors }) => {
 					allVisitors[visitor.visitorNric] = visitor.visitorNric;
 				});
 				storeVisitors(allVisitors);
+				// Store live visitor count
+				setLiveVisitorNo(Object.keys(allVisitors).length);
 			})
 			.catch((err) => console.log('Error getting all visitors count :', err));
 	};
 
-	const getAllPatients = () => {
-		// fetch('http://kyrios-env.eba-kvpkgwmc.us-east-1.elasticbeanstalk.com/login', {
-		// method: 'POST',
-		// headers: {
-		// 'Content-Type': 'application/json',
-		// },
-		// body: JSON.stringify({
-		// email: formParameters.staffID,
-		// password: formParameters.password,
-		// }),
-		// })
-		// .then((res) => res.json())
-		// .then((res) => {
-		// if (res.code == 200) {
-		// if (ACCESS == 'Administrator') {
-		// authenticateUser(true, 'ADMINISTRATOR');
-		// history.replace('/administrator'); // Replace the web page view
-		// } else {
-		// // Staff
-		// authenticateUser(true, 'STAFF');
-		// history.replace('/staff'); // Replace the web page view
-		// }
-		// } else {
-		// alert('Failed to login');
-		// }
-		// })
-		// .catch((err) => console.log('Error validating user'));
-	};
+	// Get all patients and patient's details from database
+	const getAllPatients = () => {};
 
-	// Subscribe to DB changes
-	const getUpdatedVisitorCount = () => {};
-
-	// Scan's visitor in, and updates visitor count for that bed.
-	const scanVisitorIn = (floorNumber, wardNumber, bedNumber, visitorNric, event) => {
-		event.preventDefault();
+	// API call to store checked in visitor to database
+	const checkVisitorIn = (floorNumber, wardNumber, bedNumber, Nric) => {
 		var newState = [...allWards];
 		var isVisitorAllowed = false;
+
 		newState.forEach((patient) => {
 			if (
 				patient.wardNumber == wardNumber &&
@@ -120,10 +92,61 @@ const StaffView = ({ storeVisitors, allCheckedInVisitors }) => {
 				}
 			}
 		});
+
 		setAllWards(newState);
-		isVisitorAllowed
-			? alert('Visitor is successfully admitted to the ward')
-			: alert('Patient room is full, more visitors are not allowed');
+
+		if (isVisitorAllowed) {
+			fetch('http://kyrios-env.eba-kvpkgwmc.us-east-1.elasticbeanstalk.com/visitorAccess', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					visitorNric: Nric,
+				}),
+			})
+				.then((res) => res.text())
+				.then((res) => {
+					console.log('Successful checking in of visitor: ', res);
+					alert('Visitor is successfully admitted to the ward');
+				})
+				.catch((err) => console.log('Error checking visitor in:', err));
+		} else {
+			alert('Patient room is full, more visitors are not allowed');
+		}
+	};
+
+	// Make backend call to check visitor out of database
+	const checkVisitorOut = (Nric) => {
+		fetch('http://kyrios-env.eba-kvpkgwmc.us-east-1.elasticbeanstalk.com/visitorAccess', {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				visitorNric: Nric,
+			}),
+		})
+			.then((res) => res.text())
+			.then((res) => {
+				console.log('Visitor check out successful: ', res);
+				alert('Visitor is successfully checked out');
+			})
+			.catch((err) => console.log('Error getting all visitors count :', err));
+	};
+
+	const visitorIsCheckedIn = (Nric) => {
+		return Nric in allCheckedInVisitors;
+	};
+
+	const scanVisitorIn = (floorNumber, wardNumber, bedNumber, visitorNric, event) => {
+		event.preventDefault();
+		if (visitorIsCheckedIn(visitorNric)) {
+			checkVisitorOut(visitorNric);
+		} else {
+			// Visitor not yet checked in
+			checkVisitorIn(floorNumber, wardNumber, bedNumber, visitorNric);
+		}
 	};
 
 	/**
@@ -150,7 +173,6 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 const mapStateToProps = (state) => {
-	console.log('All checked in visitors :', state.visitors.allVisitors);
 	return {
 		allCheckedInVisitors: state.visitors.allVisitors, // Object
 	};
