@@ -111,9 +111,7 @@ const PatientComponent = ({
 	} else {
 		return (
 			<>
-				<p style={{ margin: "5vh 0vh" }}>
-					--------------------------------------------------------------
-				</p>
+				<hr style={{ margin: "5vh 0vh" }} />
 				<p>Patient's name: {name}</p>
 				<p>Patient's ID: {ID}</p>
 				<p>Current maximum number of visitors: {maxVisitorNum}</p>
@@ -185,9 +183,23 @@ class AnnoucementPage extends Component {
 		});
 	}
 
-	loadAnnouncement(values) {
+	loadAnnouncement(newText) {
 		console.log("loading announcement");
 		// put in backend
+		fetch(
+			"http://kyrios-env.eba-kvpkgwmc.us-east-1.elasticbeanstalk.com/updateAnnouncement",
+			{
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					announcement: newText,
+				}),
+			}
+		)
+			.then((res) => res.json)
+			.then((res) => console.log(res));
 	}
 
 	changeVisitorNumber(number) {

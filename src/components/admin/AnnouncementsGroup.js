@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
 const AnnouncementComponent = (props) => {
-	if (props.announcementText !== null && props.announcementText !== "") {
+	if (props.announcementText !== null && props.announcementText[0] !== "") {
 		return (
 			<div
 				style={{
@@ -21,7 +21,7 @@ const AnnouncementComponent = (props) => {
 						color: "#4a018a",
 					}}
 				>
-					{props.announcementText}
+					{props.announcementText[0]}
 				</div>
 				<button
 					style={{
@@ -43,29 +43,45 @@ const AnnouncementComponent = (props) => {
 	}
 };
 
+// Handles fetching announcement from backend and closing the announcement
 class AnnouncementsGroup extends Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
 			displayedAnnouncements: [],
-			setkey: 0,
 		};
 
 		this.closeAnnouncement = this.closeAnnouncement.bind(this);
 	}
 
-	// make it auto trigger?
-	fetchAnnouncement(formParameters) {
+	fetchAnnouncement() {
 		// Get from backend
-		this.state.displayedAnnouncements.unshift(
-			<AnnouncementComponent
-				announcementText={formParameters}
-				key={this.state.setkey}
-				id={this.state.setkey}
-				closeAnnouncement={this.closeAnnouncement}
-			/>
-		);
+		fetch(
+			"http://kyrios-env.eba-kvpkgwmc.us-east-1.elasticbeanstalk.com/getAnnouncement",
+			{
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+			}
+		)
+			.then((res) => res.json())
+			.then((res) => {
+				console.log(res);
+				var setkey = 0;
+				//res.foreach((element) => {
+				this.state.displayedAnnouncements.unshift(
+					<AnnouncementComponent
+						announcementText={res}
+						key={setkey}
+						id={setkey}
+						closeAnnouncement={this.closeAnnouncement}
+					/>
+				);
+				setkey++;
+				//});
+			});
 		this.setState({ setkey: this.state.setkey + 1 });
 	}
 
@@ -79,6 +95,10 @@ class AnnouncementsGroup extends Component {
 		this.setState({
 			displayedAnnouncements: this.state.displayedAnnouncements,
 		});
+	}
+
+	componentDidMount() {
+		this.fetchAnnouncement();
 	}
 
 	render() {
