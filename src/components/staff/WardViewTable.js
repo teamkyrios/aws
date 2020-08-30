@@ -50,7 +50,6 @@ const headCells = [
 	{ id: 'name', numeric: false, disablePadding: true, label: 'Patient Name' },
 	{ id: 'wardNumber', numeric: true, disablePadding: false, label: 'Ward Number' },
 	{ id: 'bedNumber', numeric: true, disablePadding: false, label: 'Bed Number' },
-	{ id: 'floorNumber', numeric: true, disablePadding: false, label: 'Floor Number' },
 	{ id: 'currVisitors', numeric: true, disablePadding: false, label: 'Current Visitors' },
 ];
 

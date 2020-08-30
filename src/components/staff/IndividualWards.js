@@ -37,7 +37,8 @@ const ModalDetails = ({
 			<p>Ward number: {wardNumber}</p>
 			<p>Bed number: {bedNumber}</p>
 			<p>Current number of visitors: {currVisitors}</p>
-			<h3>Visitor scan</h3>
+
+			<h3>Scan visitor</h3>
 			<form>
 				<input
 					type='text'

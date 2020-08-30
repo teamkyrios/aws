@@ -31,6 +31,7 @@ Modal.setAppElement('#root');
 const StaffView = () => {
 	useEffect(() => {
 		getUpdatedVisitorCount();
+		getAllVisitors();
 	}, []);
 
 	const [liveVisitorNo, setLiveVisitorNo] = useState(115);
@@ -45,6 +46,25 @@ const StaffView = () => {
 		createData('Tomas', 3, 3, 11, 1),
 		createData('Toppiex', 5, 2, 13, 5),
 	]);
+
+	// Get all visitors currently
+	const getAllVisitors = () => {
+		console.log('Getting visitors');
+		fetch(
+			'http://kyrios-env.eba-kvpkgwmc.us-east-1.elasticbeanstalk.com/getAllVisitorsCheckedIn',
+			{
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+			}
+		)
+			.then((res) => res.json())
+			.then((res) => {
+				console.log(res);
+			})
+			.catch((err) => console.log('Error getting all visitors count :', err));
+	};
 
 	const getAllPatients = () => {
 		// fetch('http://kyrios-env.eba-kvpkgwmc.us-east-1.elasticbeanstalk.com/login', {
