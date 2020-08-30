@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 /**
  * Page of website that is only accessed by administrator.
