@@ -4,7 +4,7 @@ import { Formik, Form, useField } from 'formik';
 import styled from '@emotion/styled';
 import './FormStyles.css';
 import * as Yup from 'yup';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { authenticateUser } from '../actions/index';
 
 const MyTextInput = ({ label, ...props }) => {

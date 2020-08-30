@@ -1,3 +1,4 @@
+
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Formik, Form, useField } from "formik";
@@ -152,6 +153,7 @@ const PatientComponent = ({
 			</>
 		);
 	}
+
 };
 
 class AnnoucementPage extends Component {
