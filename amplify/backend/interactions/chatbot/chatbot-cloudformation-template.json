@@ -137,7 +137,7 @@
 				"Timeout": "300",
 				"Code": {
 					"S3Bucket": "amplify-aws-dev-143539-deployment",
-					"S3Key": "amplify-builds/chatbot-2f5a58583548484b7671-build.zip"
+					"S3Key": "amplify-builds/chatbot-776b6b367a734b786468-build.zip"
 				}
 			}
 		},
