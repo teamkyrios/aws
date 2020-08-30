@@ -203,7 +203,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-export default function EnhancedTable({ rows }) {
+export default function EnhancedTable({ rows, scanVisitorIn }) {
 	const classes = useStyles();
 	const [order, setOrder] = React.useState('asc');
 	const [orderBy, setOrderBy] = React.useState('wardNumber');
@@ -276,9 +276,12 @@ export default function EnhancedTable({ rows }) {
 										>
 											<TableCell>
 												<IndividualWards
+													floorNumber={row.floorNumber}
 													wardNumber={row.wardNumber}
 													bedNumber={row.bedNumber}
-													visitorName={row.name}
+													patientName={row.name}
+													currVisitors={row.currVisitors}
+													scanVisitorIn={scanVisitorIn}
 												/>
 											</TableCell>
 											<TableCell

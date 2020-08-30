@@ -14,7 +14,17 @@ const customStyles = {
 	},
 };
 
-const ModalDetails = ({ name, wardNumber, bedNumber, closeModal }) => {
+const ModalDetails = ({
+	name,
+	floorNumber,
+	wardNumber,
+	bedNumber,
+	closeModal,
+	currVisitors,
+	scanVisitorIn,
+}) => {
+	const [nric, setNric] = useState('');
+
 	return (
 		<div style={{ display: 'flex', flexDirection: 'column' }}>
 			<h2>{name}</h2>
@@ -23,12 +33,26 @@ const ModalDetails = ({ name, wardNumber, bedNumber, closeModal }) => {
 				onClick={closeModal}
 				style={{ position: 'relative', left: '90%', top: '10%' }}
 			/>
+			<p>Floor number: {floorNumber}</p>
 			<p>Ward number: {wardNumber}</p>
 			<p>Bed number: {bedNumber}</p>
+			<p>Current number of visitors: {currVisitors}</p>
 			<h3>Scan a visitor in</h3>
 			<form>
-				<input />
-				<button>Done</button>
+				<input
+					type='text'
+					placeholder='NRIC'
+					value={nric}
+					onChange={(e) => setNric(e.target.value)}
+				/>
+				<button
+					onClick={(e) => {
+						scanVisitorIn(floorNumber, wardNumber, bedNumber, nric, e);
+						closeModal();
+					}}
+				>
+					Done
+				</button>
 			</form>
 		</div>
 	);
@@ -37,7 +61,14 @@ const ModalDetails = ({ name, wardNumber, bedNumber, closeModal }) => {
 /**
  * Modal component for detailed view of the individual patient from the visitor management table.
  */
-const IndividualWards = ({ wardNumber, bedNumber, visitorName }) => {
+const IndividualWards = ({
+	floorNumber,
+	wardNumber,
+	bedNumber,
+	patientName,
+	currVisitors,
+	scanVisitorIn,
+}) => {
 	const [isOpen, setIsOpen] = useState(false);
 
 	const closeModal = () => setIsOpen(false);
@@ -51,10 +82,13 @@ const IndividualWards = ({ wardNumber, bedNumber, visitorName }) => {
 				contentLabel='Example Modal'
 			>
 				<ModalDetails
-					name={visitorName}
+					name={patientName}
+					floorNumber={floorNumber}
 					wardNumber={wardNumber}
 					bedNumber={bedNumber}
+					currVisitors={currVisitors}
 					closeModal={closeModal}
+					scanVisitorIn={scanVisitorIn}
 				/>
 			</Modal>
 			<button onClick={() => setIsOpen(true)}>See more</button>

@@ -49,6 +49,23 @@ const StaffView = () => {
 	// Subscribe to DB changes
 	const getUpdatedVisitorCount = () => {};
 
+	// Scan's visitor in, and updates visitor count for that bed.
+	const scanVisitorIn = (floorNumber, wardNumber, bedNumber, visitorNric, event) => {
+		event.preventDefault();
+		var newState = [...allWards];
+		newState.forEach((patient) => {
+			if (
+				patient.wardNumber == wardNumber &&
+				patient.bedNumber == bedNumber &&
+				patient.floorNumber == floorNumber
+			) {
+				patient.currVisitors += 1;
+			}
+		});
+		setAllWards(newState);
+		alert(visitorNric);
+	};
+
 	/**
 	 * Format data into an object
 	 */
@@ -63,7 +80,7 @@ const StaffView = () => {
 				closeBanner={() => setIsBannerShowing(false)}
 				liveVisitorNo={liveVisitorNo}
 			/>
-			<WardViewTable rows={allWards} />
+			<WardViewTable rows={allWards} scanVisitorIn={scanVisitorIn} />
 		</div>
 	);
 };
