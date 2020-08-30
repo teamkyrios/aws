@@ -4,6 +4,7 @@ import Modal from 'react-modal';
 import Alert from '@material-ui/lab/Alert';
 import AlertTitle from '@material-ui/lab/AlertTitle';
 import WardViewTable from './WardViewTable';
+import { storeVisitors } from '../../actions';
 
 /**
  * Alert banner which will show when there are visitors who want to visit, banner can be closed by staff.
@@ -28,7 +29,7 @@ Modal.setAppElement('#root');
 /**
  * Staff views the visitor management system
  */
-const StaffView = () => {
+const StaffView = ({ storeVisitors, allCheckedInVisitors }) => {
 	useEffect(() => {
 		getUpdatedVisitorCount();
 		getAllVisitors();
@@ -61,7 +62,11 @@ const StaffView = () => {
 		)
 			.then((res) => res.json())
 			.then((res) => {
-				console.log(res);
+				var allVisitors = {};
+				res.forEach((visitor) => {
+					allVisitors[visitor.visitorNric] = visitor.visitorNric;
+				});
+				storeVisitors(allVisitors);
 			})
 			.catch((err) => console.log('Error getting all visitors count :', err));
 	};
@@ -140,4 +145,15 @@ const StaffView = () => {
 	);
 };
 
-export default StaffView;
+const mapDispatchToProps = (dispatch) => ({
+	storeVisitors: (allVisitors) => dispatch(storeVisitors(allVisitors)),
+});
+
+const mapStateToProps = (state) => {
+	console.log('All checked in visitors :', state.visitors.allVisitors);
+	return {
+		allCheckedInVisitors: state.visitors.allVisitors, // Object
+	};
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(StaffView);

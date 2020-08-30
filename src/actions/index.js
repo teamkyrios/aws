@@ -26,3 +26,13 @@ export const signOutUser = () => {
 		type: 'SIGN_OUT',
 	};
 };
+
+/**
+ * Get visitors from backend and store in redux.
+ */
+export const storeVisitors = (allVisitors) => {
+	return {
+		type: 'STORE_VISITORS',
+		allVisitors: allVisitors,
+	};
+};
