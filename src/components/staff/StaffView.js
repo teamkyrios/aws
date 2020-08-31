@@ -49,7 +49,6 @@ const StaffView = ({ storeVisitors, allCheckedInVisitors }) => {
 
 	// Get all visitors currently checked in
 	const getAllVisitors = () => {
-		console.log('Getting visitors');
 		fetch(
 			'http://kyrios-env.eba-kvpkgwmc.us-east-1.elasticbeanstalk.com/getAllVisitorsCheckedIn',
 			{
@@ -108,18 +107,35 @@ const StaffView = ({ storeVisitors, allCheckedInVisitors }) => {
 				.then((res) => res.text())
 				.then((res) => {
 					console.log('Successful checking in of visitor: ', res);
-					alert('Visitor is successfully admitted to the ward');
+					if (res.includes('Visitor has been approved')) {
+						alert('Visitor is successfully admitted to the ward');
+					}
 				})
 				.catch((err) => console.log('Error checking visitor in:', err));
 		} else {
-			alert('Patient room is full, more visitors are not allowed');
+			alert('Patient room is full, no more visitors are allowed');
 		}
+
+		getAllVisitors(); // Refresh state
 	};
 
 	// Make backend call to check visitor out of database
-	const checkVisitorOut = (Nric) => {
-		fetch('http://kyrios-env.eba-kvpkgwmc.us-east-1.elasticbeanstalk.com/visitorAccess', {
-			method: 'GET',
+	const checkVisitorOut = (floorNumber, wardNumber, bedNumber, Nric) => {
+		// Update front end table visitor count
+		var newState = [...allWards];
+		newState.forEach((patient) => {
+			if (
+				patient.wardNumber == wardNumber &&
+				patient.bedNumber == bedNumber &&
+				patient.floorNumber == floorNumber
+			) {
+				patient.currVisitors -= 1;
+			}
+		});
+
+		setAllWards(newState);
+		fetch('http://kyrios-env.eba-kvpkgwmc.us-east-1.elasticbeanstalk.com/visitorCheckout', {
+			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
 			},
@@ -129,10 +145,13 @@ const StaffView = ({ storeVisitors, allCheckedInVisitors }) => {
 		})
 			.then((res) => res.text())
 			.then((res) => {
-				console.log('Visitor check out successful: ', res);
-				alert('Visitor is successfully checked out');
+				if (res.includes('Visitor has been checked out')) {
+					alert('Visitor is successfully checked out');
+				}
 			})
-			.catch((err) => console.log('Error getting all visitors count :', err));
+			.catch((err) => console.log('Error checking visitor out :', err));
+
+		getAllVisitors(); // Refresh state
 	};
 
 	const visitorIsCheckedIn = (Nric) => {
@@ -142,7 +161,7 @@ const StaffView = ({ storeVisitors, allCheckedInVisitors }) => {
 	const scanVisitorIn = (floorNumber, wardNumber, bedNumber, visitorNric, event) => {
 		event.preventDefault();
 		if (visitorIsCheckedIn(visitorNric)) {
-			checkVisitorOut(visitorNric);
+			checkVisitorOut(floorNumber, wardNumber, bedNumber, visitorNric);
 		} else {
 			// Visitor not yet checked in
 			checkVisitorIn(floorNumber, wardNumber, bedNumber, visitorNric);

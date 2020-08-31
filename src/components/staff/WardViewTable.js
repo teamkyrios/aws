@@ -294,7 +294,6 @@ export default function EnhancedTable({ rows, scanVisitorIn }) {
 											</TableCell>
 											<TableCell align='right'>{row.wardNumber}</TableCell>
 											<TableCell align='right'>{row.bedNumber}</TableCell>
-											<TableCell align='right'>{row.floorNumber}</TableCell>
 											<TableCell align='right'>
 												<Badge
 													color={
