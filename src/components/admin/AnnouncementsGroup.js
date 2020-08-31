@@ -1,7 +1,10 @@
 import React, { Component } from "react";
 
 const AnnouncementComponent = (props) => {
-	if (props.announcementText !== null && props.announcementText[0] !== "") {
+	if (
+		props.announcementText !== null &&
+		props.announcementText.length !== 0
+	) {
 		return (
 			<div
 				style={{
@@ -21,7 +24,7 @@ const AnnouncementComponent = (props) => {
 						color: "#4a018a",
 					}}
 				>
-					{props.announcementText[0]}
+					{props.announcementText}
 				</div>
 				<button
 					style={{
@@ -32,7 +35,7 @@ const AnnouncementComponent = (props) => {
 					}}
 					type="button"
 					aria-label="Close"
-					onClick={() => props.closeAnnouncement(props.id)}
+					onClick={() => props.closeAnnouncement()}
 				>
 					X
 				</button>
@@ -49,13 +52,19 @@ class AnnouncementsGroup extends Component {
 		super(props);
 
 		this.state = {
-			displayedAnnouncements: [],
+			displayedAnnouncement: <></>,
 		};
 
 		this.closeAnnouncement = this.closeAnnouncement.bind(this);
 	}
 
-	fetchAnnouncement() {
+	closeAnnouncement() {
+		this.setState({
+			displayedAnnouncement: <></>,
+		});
+	}
+
+	componentDidMount() {
 		// Get from backend
 		fetch(
 			"http://kyrios-env.eba-kvpkgwmc.us-east-1.elasticbeanstalk.com/getAnnouncement",
@@ -66,43 +75,23 @@ class AnnouncementsGroup extends Component {
 				},
 			}
 		)
-			.then((res) => res.json())
+			.then((res) => res.text())
 			.then((res) => {
 				console.log(res);
-				var setkey = 0;
-				//res.foreach((element) => {
-				this.state.displayedAnnouncements.unshift(
-					<AnnouncementComponent
-						announcementText={res}
-						key={setkey}
-						id={setkey}
-						closeAnnouncement={this.closeAnnouncement}
-					/>
-				);
-				setkey++;
-				//});
-			});
-		this.setState({ setkey: this.state.setkey + 1 });
-	}
-
-	closeAnnouncement(id) {
-		this.state.displayedAnnouncements.splice(
-			this.state.displayedAnnouncements.findIndex(
-				(x) => x.props.id === id
-			),
-			1
-		);
-		this.setState({
-			displayedAnnouncements: this.state.displayedAnnouncements,
-		});
-	}
-
-	componentDidMount() {
-		this.fetchAnnouncement();
+				this.setState({
+					displayedAnnouncement: (
+						<AnnouncementComponent
+							announcementText={res}
+							closeAnnouncement={this.closeAnnouncement}
+						/>
+					),
+				});
+			})
+			.catch((err) => console.log("Error getting announcement"));
 	}
 
 	render() {
-		return <div>{this.state.displayedAnnouncements}</div>;
+		return <>{this.state.displayedAnnouncement}</>;
 	}
 }
 

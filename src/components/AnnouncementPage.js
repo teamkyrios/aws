@@ -1,4 +1,3 @@
-
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Formik, Form, useField } from "formik";
@@ -31,7 +30,7 @@ const MyNumberInput = ({ label, ...props }) => {
 	);
 };
 
-const AnnouncementForm = ({ loadAnnouncement }) => {
+const AnnouncementForm = () => {
 	return (
 		<Formik
 			initialValues={{
@@ -43,7 +42,23 @@ const AnnouncementForm = ({ loadAnnouncement }) => {
 					.required("Required"),
 			})}
 			onSubmit={(values, { resetForm }) => {
-				loadAnnouncement(values["announcement"]);
+				console.log("loading announcement");
+				// put in backend
+				fetch(
+					"http://kyrios-env.eba-kvpkgwmc.us-east-1.elasticbeanstalk.com/updateAnnouncement",
+					{
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify({
+							announcement: values["announcement"],
+						}),
+					}
+				)
+					.then((res) => res.text())
+					.then((res) => alert(res))
+					.catch((err) => alert("Error updating announcement"));
 				resetForm({ values: "" });
 			}}
 		>
@@ -60,25 +75,48 @@ const AnnouncementForm = ({ loadAnnouncement }) => {
 					type="text"
 					placeholder="Type announcement here"
 				/>
-				<button type="submit">Announce</button>
+				<button style={{ borderRadius: 10 }} type="submit">
+					Announce
+				</button>
 			</Form>
 		</Formik>
 	);
 };
 
-const PatientForm = ({ fetchPatient }) => {
-	return (
+const VisitationForm = () => {
+	let findPatientbyId = (
 		<Formik
 			initialValues={{
-				patient: "",
+				patientName: "",
+				patientNric: "",
 			}}
 			validationSchema={Yup.object({
-				patient: Yup.string()
+				patientName: Yup.string()
+					.min(1, "Must be at least 1 character long")
+					.required("Required"),
+				patientNric: Yup.string()
 					.min(1, "Must be at least 1 character long")
 					.required("Required"),
 			})}
 			onSubmit={(values) => {
-				fetchPatient(values["patient"]);
+				fetch(
+					"http://kyrios-env.eba-kvpkgwmc.us-east-1.elasticbeanstalk.com/getPatientVisitorAllowed",
+					{
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify({
+							patientName: values["patientName"],
+							patientNric: values["patientNric"],
+						}),
+					}
+				)
+					.then((res) => res.text())
+					.then((res) => alert(res))
+					.catch((err) =>
+						console.log("Error finding patient's visitation rules")
+					);
 			}}
 		>
 			<Form
@@ -89,71 +127,104 @@ const PatientForm = ({ fetchPatient }) => {
 				}}
 			>
 				<MyTextInput
-					label="Find patient"
-					name="patient"
+					label="Patient's name"
+					name="patientName"
 					type="text"
-					placeholder="NRIC/ID#"
+					placeholder="Jon Snow"
 				/>
-				<button type="submit">Search</button>
+				<MyTextInput
+					label="Patient's NRIC/ID"
+					name="patientNric"
+					type="text"
+					placeholder="S0011223A"
+				/>
+				<button
+					style={{ marginBottom: 20, borderRadius: 10 }}
+					type="submit"
+				>
+					Search
+				</button>
 			</Form>
 		</Formik>
 	);
-};
-
-const PatientComponent = ({
-	editingPatient,
-	name,
-	ID,
-	maxVisitorNum,
-	change,
-}) => {
-	if (editingPatient === false) {
-		return <div></div>;
-	} else {
-		return (
-			<>
-				<hr style={{ margin: "5vh 0vh" }} />
-				<p>Patient's name: {name}</p>
-				<p>Patient's ID: {ID}</p>
-				<p>Current maximum number of visitors: {maxVisitorNum}</p>
-				<Formik
-					initialValues={{
-						visitors: 5,
-					}}
-					validationSchema={Yup.object({
-						visitors: Yup.number()
-							.min(0, "Must be at least 0")
-							.max(
-								5,
-								"Must be at most 5 due to current restrictions"
-							)
-							.required("Required"),
-					})}
-					onSubmit={(values) => {
-						change(values["visitors"]);
-						console.log(values);
-					}}
+	let setMaxCount = (
+		<Formik
+			initialValues={{
+				ward: "",
+				icu: "",
+				visitors: "",
+			}}
+			validationSchema={Yup.object({
+				ward: Yup.number()
+					.min(1, "Must be at least 1")
+					.required("Required"),
+				icu: Yup.number()
+					.min(1, "Must be at least 1")
+					.required("Required"),
+				visitors: Yup.number()
+					.min(0, "Must not be a negative number")
+					.required("Required"),
+			})}
+			onSubmit={(values) => {
+				fetch(
+					"http://kyrios-env.eba-kvpkgwmc.us-east-1.elasticbeanstalk.com/setMaxCount",
+					{
+						method: "GET",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify({
+							ward: values["ward"],
+							icu: values["icu"],
+							something: values["visitors"],
+						}),
+					}
+				)
+					.then((res) => res.text())
+					.then((res) => alert(res))
+					.catch((err) => alert("Error setting max count"));
+			}}
+		>
+			<Form
+				style={{
+					alignItems: "flex-start",
+					flexDirection: "column",
+					display: "flex",
+				}}
+			>
+				<MyNumberInput
+					label="Ward number"
+					name="ward"
+					type="number"
+					placeholder="Enter the ward number"
+				/>
+				<MyNumberInput
+					label="ICU number"
+					name="icu"
+					type="number"
+					placeholder="Enter the ICU number"
+				/>
+				<MyNumberInput
+					label="Maximum number of visitors allowed"
+					name="visitors"
+					type="number"
+					placeholder="Enter a positive number"
+				/>
+				<button
+					style={{ marginBottom: 20, borderRadius: 10 }}
+					type="submit"
 				>
-					<Form
-						style={{
-							alignItems: "flex-start",
-							flexDirection: "column",
-							display: "flex",
-						}}
-					>
-						<MyNumberInput
-							label="Change maximum number of visitors"
-							name="visitors"
-							type="number"
-							placeholder="Enter a number from 0 to 5"
-						/>
-						<button type="submit">Confirm change</button>
-					</Form>
-				</Formik>
-			</>
-		);
-	}
-
+					Enter
+				</button>
+			</Form>
+		</Formik>
+	);
+	return (
+		<>
+			<div>{findPatientbyId}</div>
+			<div>{setMaxCount}</div>
+		</>
+	);
 };
 
 class AnnoucementPage extends Component {
@@ -161,57 +232,24 @@ class AnnoucementPage extends Component {
 		super(props);
 
 		this.state = {
-			patientName: null,
-			patientId: null,
-			maxVisitorNum: null,
-			editingPatient: false,
+			adminTab: 0,
 		};
-
-		this.changeVisitorNumber = this.changeVisitorNumber.bind(this);
-		this.fetchPatient = this.fetchPatient.bind(this);
-		this.loadAnnouncement = this.loadAnnouncement.bind(this);
 	}
 
-	fetchPatient(id) {
-		console.log("fetching patient");
-		// Call backend
-		// Display patient name, id, visitors allowed
-		// edit visitors allowed and send info back
+	changeAdminTab(index) {
 		this.setState({
-			patientName: null,
-			patientId: null,
-			maxVisitorNum: null,
-			editingPatient: true,
+			adminTab: index,
 		});
-	}
-
-	loadAnnouncement(newText) {
-		console.log("loading announcement");
-		// put in backend
-		fetch(
-			"http://kyrios-env.eba-kvpkgwmc.us-east-1.elasticbeanstalk.com/updateAnnouncement",
-			{
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({
-					announcement: newText,
-				}),
-			}
-		)
-			.then((res) => res.json)
-			.then((res) => console.log(res));
-	}
-
-	changeVisitorNumber(number) {
-		this.setState({
-			maxVisitorNum: number,
-		});
-		console.log(this.state.maxVisitorNum);
 	}
 
 	render() {
+		let currAdminTab;
+		if (this.state.adminTab === 0) {
+			currAdminTab = <AnnouncementForm />;
+		} else if (this.state.adminTab === 1) {
+			currAdminTab = <VisitationForm />;
+		}
+
 		return (
 			<div>
 				<AnnouncementsGroup />
@@ -222,20 +260,36 @@ class AnnoucementPage extends Component {
 						alignItems: "center",
 					}}
 				>
-					<div>
-						<h2>Admin</h2>
-						<AnnouncementForm
-							loadAnnouncement={this.loadAnnouncement}
-						/>
-						<p style={{ margin: "5vh" }}></p>
-						<PatientForm fetchPatient={this.fetchPatient} />
-						<PatientComponent
-							editingPatient={this.state.editingPatient}
-							name={this.state.patientName}
-							ID={this.state.patientId}
-							maxVisitorNum={this.maxVisitorNum}
-							change={this.changeVisitorNumber}
-						/>
+					<h2>Admin</h2>
+					<div
+						style={{
+							flexDirection: "row",
+						}}
+					>
+						<button
+							style={{
+								borderRadius: 10,
+							}}
+							onClick={() => this.changeAdminTab(0)}
+						>
+							Make an announcement
+						</button>
+						<button
+							style={{
+								borderRadius: 10,
+							}}
+							onClick={() => this.changeAdminTab(1)}
+						>
+							Change visitation rules
+						</button>
+					</div>
+					<div
+						style={{
+							flexDirection: "column",
+						}}
+					>
+						<hr />
+						{currAdminTab}
 					</div>
 				</div>
 			</div>
