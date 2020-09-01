@@ -1,19 +1,16 @@
-
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { Formik, Form, useField } from "formik";
-import AnnouncementsGroup from "./admin/AnnouncementsGroup";
-import * as Yup from "yup";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { Formik, Form, useField } from 'formik';
+import AnnouncementsGroup from './admin/AnnouncementsGroup';
+import * as Yup from 'yup';
 
 const MyTextInput = ({ label, ...props }) => {
 	const [field, meta] = useField(props);
 	return (
 		<>
 			<label htmlFor={props.id || props.name}>{label}</label>
-			<input className="text-input" {...field} {...props} />
-			{meta.touched && meta.error ? (
-				<div className="error">{meta.error}</div>
-			) : null}
+			<input className='text-input' {...field} {...props} />
+			{meta.touched && meta.error ? <div className='error'>{meta.error}</div> : null}
 		</>
 	);
 };
@@ -23,10 +20,8 @@ const MyNumberInput = ({ label, ...props }) => {
 	return (
 		<>
 			<label htmlFor={props.id || props.name}>{label}</label>
-			<input className="number-input" {...field} {...props} />
-			{meta.touched && meta.error ? (
-				<div className="error">{meta.error}</div>
-			) : null}
+			<input className='number-input' {...field} {...props} />
+			{meta.touched && meta.error ? <div className='error'>{meta.error}</div> : null}
 		</>
 	);
 };
@@ -35,32 +30,32 @@ const AnnouncementForm = ({ loadAnnouncement }) => {
 	return (
 		<Formik
 			initialValues={{
-				announcement: "",
+				announcement: '',
 			}}
 			validationSchema={Yup.object({
 				announcement: Yup.string()
-					.min(1, "Must be at least 1 character long")
-					.required("Required"),
+					.min(1, 'Must be at least 1 character long')
+					.required('Required'),
 			})}
 			onSubmit={(values, { resetForm }) => {
-				loadAnnouncement(values["announcement"]);
-				resetForm({ values: "" });
+				loadAnnouncement(values['announcement']);
+				resetForm({ values: '' });
 			}}
 		>
 			<Form
 				style={{
-					alignItems: "flex-start",
-					flexDirection: "column",
-					display: "flex",
+					alignItems: 'flex-start',
+					flexDirection: 'column',
+					display: 'flex',
 				}}
 			>
 				<MyTextInput
-					label="Make an announcement"
-					name="announcement"
-					type="text"
-					placeholder="Type announcement here"
+					label='Make an announcement'
+					name='announcement'
+					type='text'
+					placeholder='Type announcement here'
 				/>
-				<button type="submit">Announce</button>
+				<button type='submit'>Announce</button>
 			</Form>
 		</Formik>
 	);
@@ -70,49 +65,43 @@ const PatientForm = ({ fetchPatient }) => {
 	return (
 		<Formik
 			initialValues={{
-				patient: "",
+				patient: '',
 			}}
 			validationSchema={Yup.object({
 				patient: Yup.string()
-					.min(1, "Must be at least 1 character long")
-					.required("Required"),
+					.min(1, 'Must be at least 1 character long')
+					.required('Required'),
 			})}
 			onSubmit={(values) => {
-				fetchPatient(values["patient"]);
+				fetchPatient(values['patient']);
 			}}
 		>
 			<Form
 				style={{
-					alignItems: "flex-start",
-					flexDirection: "column",
-					display: "flex",
+					alignItems: 'flex-start',
+					flexDirection: 'column',
+					display: 'flex',
 				}}
 			>
 				<MyTextInput
-					label="Find patient"
-					name="patient"
-					type="text"
-					placeholder="NRIC/ID#"
+					label='Find patient'
+					name='patient'
+					type='text'
+					placeholder='NRIC/ID#'
 				/>
-				<button type="submit">Search</button>
+				<button type='submit'>Search</button>
 			</Form>
 		</Formik>
 	);
 };
 
-const PatientComponent = ({
-	editingPatient,
-	name,
-	ID,
-	maxVisitorNum,
-	change,
-}) => {
+const PatientComponent = ({ editingPatient, name, ID, maxVisitorNum, change }) => {
 	if (editingPatient === false) {
 		return <div></div>;
 	} else {
 		return (
 			<>
-				<hr style={{ margin: "5vh 0vh" }} />
+				<hr style={{ margin: '5vh 0vh' }} />
 				<p>Patient's name: {name}</p>
 				<p>Patient's ID: {ID}</p>
 				<p>Current maximum number of visitors: {maxVisitorNum}</p>
@@ -122,41 +111,37 @@ const PatientComponent = ({
 					}}
 					validationSchema={Yup.object({
 						visitors: Yup.number()
-							.min(0, "Must be at least 0")
-							.max(
-								5,
-								"Must be at most 5 due to current restrictions"
-							)
-							.required("Required"),
+							.min(0, 'Must be at least 0')
+							.max(5, 'Must be at most 5 due to current restrictions')
+							.required('Required'),
 					})}
 					onSubmit={(values) => {
-						change(values["visitors"]);
+						change(values['visitors']);
 						console.log(values);
 					}}
 				>
 					<Form
 						style={{
-							alignItems: "flex-start",
-							flexDirection: "column",
-							display: "flex",
+							alignItems: 'flex-start',
+							flexDirection: 'column',
+							display: 'flex',
 						}}
 					>
 						<MyNumberInput
-							label="Change maximum number of visitors"
-							name="visitors"
-							type="number"
-							placeholder="Enter a number from 0 to 5"
+							label='Change maximum number of visitors'
+							name='visitors'
+							type='number'
+							placeholder='Enter a number from 0 to 5'
 						/>
-						<button type="submit">Confirm change</button>
+						<button type='submit'>Confirm change</button>
 					</Form>
 				</Formik>
 			</>
 		);
 	}
-
 };
 
-class AnnoucementPage extends Component {
+class ScreeningPage extends Component {
 	constructor(props) {
 		super(props);
 
@@ -173,7 +158,7 @@ class AnnoucementPage extends Component {
 	}
 
 	fetchPatient(id) {
-		console.log("fetching patient");
+		console.log('fetching patient');
 		// Call backend
 		// Display patient name, id, visitors allowed
 		// edit visitors allowed and send info back
@@ -186,20 +171,17 @@ class AnnoucementPage extends Component {
 	}
 
 	loadAnnouncement(newText) {
-		console.log("loading announcement");
+		console.log('loading announcement');
 		// put in backend
-		fetch(
-			"http://kyrios-env.eba-kvpkgwmc.us-east-1.elasticbeanstalk.com/updateAnnouncement",
-			{
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({
-					announcement: newText,
-				}),
-			}
-		)
+		fetch('http://kyrios-env.eba-kvpkgwmc.us-east-1.elasticbeanstalk.com/updateAnnouncement', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				announcement: newText,
+			}),
+		})
 			.then((res) => res.json)
 			.then((res) => console.log(res));
 	}
@@ -217,17 +199,15 @@ class AnnoucementPage extends Component {
 				<AnnouncementsGroup />
 				<div
 					style={{
-						display: "flex",
-						flexDirection: "column",
-						alignItems: "center",
+						display: 'flex',
+						flexDirection: 'column',
+						alignItems: 'center',
 					}}
 				>
 					<div>
 						<h2>Admin</h2>
-						<AnnouncementForm
-							loadAnnouncement={this.loadAnnouncement}
-						/>
-						<p style={{ margin: "5vh" }}></p>
+						<AnnouncementForm loadAnnouncement={this.loadAnnouncement} />
+						<p style={{ margin: '5vh' }}></p>
 						<PatientForm fetchPatient={this.fetchPatient} />
 						<PatientComponent
 							editingPatient={this.state.editingPatient}
@@ -249,4 +229,4 @@ const mapStateToProps = (state) => {
 	};
 };
 
-export default connect(mapStateToProps, null)(AnnoucementPage);
+export default connect(mapStateToProps, null)(ScreeningPage);
