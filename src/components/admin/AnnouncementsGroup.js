@@ -1,45 +1,20 @@
 import React, { Component } from "react";
+import Alert from "@material-ui/lab/Alert";
+import AlertTitle from "@material-ui/lab/AlertTitle";
 
+// UI for the announcements
 const AnnouncementComponent = (props) => {
 	if (
 		props.announcementText !== null &&
 		props.announcementText.length !== 0
 	) {
 		return (
-			<div
-				style={{
-					zIndex: 1,
-					display: "flex",
-					justifyContent: "space-between",
-					background: "#fbf7ff",
-					padding: "1.2rem 1rem 1.1rem 1.4rem",
-					margin: "1rem 3rem",
-					borderRadius: "10px",
-					border: "2px solid #bc97db",
-				}}
-			>
-				<div
-					style={{
-						marginRight: ".5rem",
-						color: "#4a018a",
-					}}
-				>
-					{props.announcementText}
-				</div>
-				<button
-					style={{
-						padding: 0,
-						backgroundColor: "initial",
-						border: 0,
-						color: "grey",
-					}}
-					type="button"
-					aria-label="Close"
-					onClick={() => props.closeAnnouncement()}
-				>
-					X
-				</button>
-			</div>
+			<Alert severity="info" onClose={props.closeAnnouncement}>
+				<AlertTitle>
+					<strong>Announcement</strong>
+				</AlertTitle>
+				<p>{props.announcementText}</p>
+			</Alert>
 		);
 	} else {
 		return <div></div>;
@@ -77,7 +52,7 @@ class AnnouncementsGroup extends Component {
 		)
 			.then((res) => res.text())
 			.then((res) => {
-				console.log(res);
+				console.log("Displaying announcement: " + res);
 				this.setState({
 					displayedAnnouncement: (
 						<AnnouncementComponent
@@ -87,11 +62,15 @@ class AnnouncementsGroup extends Component {
 					),
 				});
 			})
-			.catch((err) => console.log("Error getting announcement"));
+			.catch((err) => console.log("Error getting announcement."));
 	}
 
 	render() {
-		return <>{this.state.displayedAnnouncement}</>;
+		return (
+			<div style={{ marginBottom: "15px" }}>
+				{this.state.displayedAnnouncement}
+			</div>
+		);
 	}
 }
 
