@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { BrowserRouter as Router, Switch, Route, Redirect, Link } from 'react-router-dom';
 import LandingPage from './components/LandingPage';
 import TopNavbar from './components/TopNavbar';
-import AnnouncementPage from './components/AnnouncementPage';
+import ScreeningPage from './components/ScreeningPage';
 import LoginPage from './components/LoginPage';
 import AdminView from './components/admin/AdminView';
 import StaffView from './components/staff/StaffView';
@@ -49,8 +49,8 @@ function App({ isAuthenticated }) {
 				<Route path='/login'>
 					<LoginPage />
 				</Route>
-				<Route path='/announcements'>
-					<AnnouncementPage />
+				<Route path='/screening'>
+					<ScreeningPage />
 				</Route>
 				<PrivateRoute path='/administrator'>
 					<AdminView />

@@ -38,9 +38,9 @@ const TopNavbar = (props) => {
 						<NavItem>
 							<NavLink
 								style={{ cursor: 'pointer' }}
-								onClick={() => history.push('/announcements')}
+								onClick={() => history.push('/screening')}
 							>
-								Announcements
+								Screening
 							</NavLink>
 						</NavItem>
 						<UncontrolledDropdown nav inNavbar>
