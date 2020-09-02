@@ -31,21 +31,13 @@ Modal.setAppElement('#root');
  */
 const StaffView = ({ storeVisitors, allCheckedInVisitors }) => {
 	useEffect(() => {
+		getAllPatients();
 		getAllVisitors();
 	}, []);
 
 	const [liveVisitorNo, setLiveVisitorNo] = useState(115);
 	const [isBannerShowing, setIsBannerShowing] = useState(true);
-	const [allWards, setAllWards] = useState([
-		createData('Hans', 4, 1, 12, 4),
-		createData('Rui Feng', 4, 2, 12, 1),
-		createData('Max', 4, 3, 12, 2),
-		createData('Jun Xue', 4, 4, 12, 3),
-		createData('Bayes', 1, 1, 10, 2),
-		createData('Xuan Yi', 2, 2, 10, 3),
-		createData('Tomas', 3, 3, 11, 1),
-		createData('Toppiex', 5, 2, 13, 5),
-	]);
+	const [allWards, setAllWards] = useState([]);
 
 	// Get all visitors currently checked in
 	const getAllVisitors = () => {
@@ -72,7 +64,30 @@ const StaffView = ({ storeVisitors, allCheckedInVisitors }) => {
 	};
 
 	// Get all patients and patient's details from database
-	const getAllPatients = () => {};
+	const getAllPatients = () => {
+		fetch('http://kyrios-env.eba-kvpkgwmc.us-east-1.elasticbeanstalk.com/getLivePatientData', {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		})
+			.then((res) => res.json())
+			.then((res) => {
+				var allWard = [];
+				res.forEach((patient) => {
+					var data = createData(
+						patient.patientName,
+						patient.wardNumber,
+						patient.bedNumber,
+						patient.wardNumber,
+						patient.currentNumberOfVisitors
+					);
+					allWard.push(data);
+				});
+				setAllWards(allWard);
+			})
+			.catch((err) => console.log('Error getting all patients: ', err));
+	};
 
 	// API call to store checked in visitor to database
 	const checkVisitorIn = (floorNumber, wardNumber, bedNumber, Nric) => {
