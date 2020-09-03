@@ -18,7 +18,7 @@ const TopBanner = (props) => {
 			<AlertTitle>
 				<strong>Pending Visitors </strong>
 			</AlertTitle>
-			<p>There are visitors awaiting entry for wards 3, 5 and 16 !</p>
+			<p>There are visitors awaiting entry for wards 7, 8 and 11 !</p>
 			There are {props.liveVisitorNo} visitors currently
 		</Alert>
 	);
@@ -35,7 +35,7 @@ const StaffView = ({ storeVisitors, allCheckedInVisitors }) => {
 		getAllVisitors();
 	}, []);
 
-	const [liveVisitorNo, setLiveVisitorNo] = useState(115);
+	const [liveVisitorNo, setLiveVisitorNo] = useState(0);
 	const [isBannerShowing, setIsBannerShowing] = useState(true);
 	const [allWards, setAllWards] = useState([]);
 
@@ -123,6 +123,10 @@ const StaffView = ({ storeVisitors, allCheckedInVisitors }) => {
 				.then((res) => {
 					console.log('Successful checking in of visitor: ', res);
 					if (res.includes('Visitor has been approved')) {
+						var allVisitors = allCheckedInVisitors;
+						allVisitors[Nric] = Nric;
+						storeVisitors(allVisitors); // Update redux state
+						setLiveVisitorNo(liveVisitorNo++);
 						alert('Visitor is successfully admitted to the ward');
 					}
 				})
@@ -161,6 +165,10 @@ const StaffView = ({ storeVisitors, allCheckedInVisitors }) => {
 			.then((res) => res.text())
 			.then((res) => {
 				if (res.includes('Visitor has been checked out')) {
+					var allVisitors = allCheckedInVisitors;
+					delete allVisitors[Nric];
+					storeVisitors(allVisitors); // Update redux state
+					setLiveVisitorNo(liveVisitorNo--);
 					alert('Visitor is successfully checked out');
 				}
 			})
