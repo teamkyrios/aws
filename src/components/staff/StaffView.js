@@ -94,20 +94,18 @@ const StaffView = ({ storeVisitors, allCheckedInVisitors }) => {
 		var newState = [...allWards];
 		var isVisitorAllowed = false;
 
-		newState.forEach((patient) => {
+		// Determine if visitor can be added from frontend
+		var j = 0;
+		for (var i = 0; i < newState.length; i++) {
 			if (
-				patient.wardNumber == wardNumber &&
-				patient.bedNumber == bedNumber &&
-				patient.floorNumber == floorNumber
-			) {
-				if (patient.currVisitors < 5) {
-					patient.currVisitors += 1;
-					isVisitorAllowed = true;
-				}
-			}
-		});
-
-		setAllWards(newState);
+				newState[i].wardNumber == wardNumber &&
+				newState[i].bedNumber == bedNumber &&
+				newState[i].floorNumber == floorNumber &&
+				newState[i].currVisitors < 5
+			)
+				j = i;
+			isVisitorAllowed = true;
+		}
 
 		if (isVisitorAllowed) {
 			fetch('http://kyrios-env.eba-kvpkgwmc.us-east-1.elasticbeanstalk.com/visitorAccess', {
@@ -123,19 +121,22 @@ const StaffView = ({ storeVisitors, allCheckedInVisitors }) => {
 				.then((res) => {
 					console.log('Successful checking in of visitor: ', res);
 					if (res.includes('Visitor has been approved')) {
+						newState[j].currVisitors += 1;
 						var allVisitors = allCheckedInVisitors;
 						allVisitors[Nric] = Nric;
 						storeVisitors(allVisitors); // Update redux state
-						setLiveVisitorNo(liveVisitorNo++);
+						setLiveVisitorNo(liveVisitorNo + 1);
+						setAllWards(newState);
+						getAllVisitors(); // Refresh state
 						alert('Visitor is successfully admitted to the ward');
+					} else {
+						alert(res);
 					}
 				})
 				.catch((err) => console.log('Error checking visitor in:', err));
 		} else {
 			alert('Patient room is full, no more visitors are allowed');
 		}
-
-		getAllVisitors(); // Refresh state
 	};
 
 	// Make backend call to check visitor out of database
@@ -168,7 +169,7 @@ const StaffView = ({ storeVisitors, allCheckedInVisitors }) => {
 					var allVisitors = allCheckedInVisitors;
 					delete allVisitors[Nric];
 					storeVisitors(allVisitors); // Update redux state
-					setLiveVisitorNo(liveVisitorNo--);
+					setLiveVisitorNo(liveVisitorNo - 1);
 					alert('Visitor is successfully checked out');
 				}
 			})
